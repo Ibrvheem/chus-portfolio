@@ -148,4 +148,3 @@ const variants = {
     x: -20,
   },
 };
-

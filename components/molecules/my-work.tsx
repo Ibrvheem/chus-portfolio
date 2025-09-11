@@ -1,6 +1,7 @@
 import React from "react";
 import { DirectionAwareHover } from "../ui/direction-aware-hover";
 import { div } from "motion/react-client";
+import { LinkPreview } from "../ui/link-preview";
 
 const projects = [
   {
@@ -46,7 +47,7 @@ export default function MyWork() {
           <div
             key={idx}
             style={{ width: project.width }}
-            className="flex-grow relative"
+            className="flex-grow relative overflow-visible"
           >
             <DirectionAwareHoverCard
               imageUrl={project.imageUrl}
@@ -73,26 +74,28 @@ function DirectionAwareHoverCard({
     <DirectionAwareHover
       imageUrl={imageUrl}
       imageClassName="!h-[60vh] object-center"
-      className="!w-full !h-fit relative bg-"
-      childrenClassName="backdrop-blur"
+      className="!w-full !h-fit relative "
+      childrenClassName="max-w-full overflow-visible backdrop-blur p-4 border border-white/15 rounded-xl flex flex-row justify-between items-center"
     >
-      <div className="p-4   border border-white/15 rounded-xl flex justify-between items-center w-full transition-all duration-300 ease-in-out animate">
+      <>
         <p className="font-bold">{description}</p>
-        <div className="font-normal text-sm ">
+        <div className="font-normal text-sm relative">
           {website ? (
-            <a
-              href={website}
-              target="_blank"
-              className="underline"
-              rel="noopener noreferrer"
-            >
-              Visit Site
-            </a>
+            <LinkPreview url={website} className="text-white relative z-200 ">
+              <a
+                href={website}
+                target="_blank"
+                className="underline"
+                rel="noopener noreferrer"
+              >
+                Visit Site
+              </a>
+            </LinkPreview>
           ) : (
             <div className="text-white text-xs">NDA</div>
           )}
         </div>
-      </div>
+      </>
     </DirectionAwareHover>
   );
 }
