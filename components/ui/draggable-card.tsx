@@ -107,7 +107,7 @@ export const DraggableCardBody = ({
   return (
     <motion.div
       ref={cardRef}
-      drag
+      // drag
       dragConstraints={constraints}
       onDragStart={() => {
         document.body.style.cursor = "grabbing";
