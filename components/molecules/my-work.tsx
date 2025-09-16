@@ -38,7 +38,7 @@ const projects = [
 
 export default function MyWork() {
   return (
-    <div className="min-h-[300vh] container mx-auto space-y-16 ">
+    <div className="container mx-auto space-y-16 min-h-screen mb-96">
       <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
         My Work
       </h1>

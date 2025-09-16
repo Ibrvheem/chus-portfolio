@@ -1,5 +1,6 @@
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import AboutMe from "@/components/molecules/about-me";
+import DesignExplorations from "@/components/molecules/design-explorations";
 import { DraggableCardDemo } from "@/components/molecules/draggable-card";
 import MyWork from "@/components/molecules/my-work";
 import Navbar from "@/components/molecules/navbar";
@@ -11,7 +12,7 @@ export default function Home() {
   return (
     <div className="font-sans   gap-16  bg-[#0C121B]">
       <div className="container  mx-auto text-white text-center space-y-8">
-        <div className="w-full flex items-center justify-center z-0 relative">
+        <div className="w-full flex items-center justify-center z-10 relative">
           <div>
             <Navbar />
           </div>
@@ -48,6 +49,7 @@ export default function Home() {
         </div>
         <AboutMe />
         <MyWork />
+        <DesignExplorations />
       </div>
     </div>
   );
