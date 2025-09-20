@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   EmblaCarouselType,
   EmblaEventType,
@@ -31,6 +31,8 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   });
   const tweenFactor = useRef(0);
   const tweenNodes = useRef<HTMLElement[]>([]);
+  const prevButtonRef = useRef<HTMLButtonElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
@@ -92,6 +94,44 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     []
   );
 
+  // Update button backgrounds and trigger smooth slide animation
+  useEffect(() => {
+    const updateButtonBackgrounds = () => {
+      const prevIndex = getPrevSlideIndex();
+      const nextIndex = getNextSlideIndex();
+
+      if (prevButtonRef.current) {
+        const prevImageUrl = `url(https://picsum.photos/600/350?v=${slides[prevIndex]})`;
+        prevButtonRef.current.style.setProperty("--bg-image", prevImageUrl);
+
+        // Set the background on the pseudo-element
+        const sheet = document.styleSheets[0];
+        const rule = `.embla__button--prev::before { background-image: ${prevImageUrl}; }`;
+        try {
+          sheet.insertRule(rule, sheet.cssRules.length);
+        } catch (e) {
+          // Rule might already exist, that's okay
+        }
+      }
+
+      if (nextButtonRef.current) {
+        const nextImageUrl = `url(https://picsum.photos/600/350?v=${slides[nextIndex]})`;
+        nextButtonRef.current.style.setProperty("--bg-image", nextImageUrl);
+
+        // Set the background on the pseudo-element
+        const sheet = document.styleSheets[0];
+        const rule = `.embla__button--next::before { background-image: ${nextImageUrl}; }`;
+        try {
+          sheet.insertRule(rule, sheet.cssRules.length);
+        } catch (e) {
+          // Rule might already exist, that's okay
+        }
+      }
+    };
+
+    updateButtonBackgrounds();
+  }, [selectedIndex, slides]);
+
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -117,171 +157,123 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     return selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0;
   };
 
-  // Animation variants
-  const snippetVariants = {
-    initial: { scale: 0.8, opacity: 0, x: 20 },
-    animate: { scale: 1, opacity: 0.6, x: 0 },
-    hover: { scale: 1.05, opacity: 0.8 },
-    exit: { scale: 0.8, opacity: 0, x: -20 },
+  // Enhanced click handlers with smooth slide animation
+  const handlePrevClick = () => {
+    if (prevButtonRef.current) {
+      prevButtonRef.current.classList.add(
+        "embla__button--sliding",
+        "embla__button--prev"
+      );
+      setTimeout(() => {
+        prevButtonRef.current?.classList.remove("embla__button--sliding");
+      }, 800);
+    }
+    onPrevButtonClick();
   };
 
-  const buttonVariants = {
-    initial: { scale: 0.8, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    hover: { scale: 1.1, rotate: 5 },
-    tap: { scale: 0.95 },
-  };
-
-  const slideVariants = {
-    initial: { scale: 0.9, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    exit: { scale: 0.9, opacity: 0 },
+  const handleNextClick = () => {
+    if (nextButtonRef.current) {
+      nextButtonRef.current.classList.add(
+        "embla__button--sliding",
+        "embla__button--next"
+      );
+      setTimeout(() => {
+        nextButtonRef.current?.classList.remove("embla__button--sliding");
+      }, 800);
+    }
+    onNextButtonClick();
   };
 
   return (
-    <motion.div
-      className="embla"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <div className="embla">
       {/* Navigation layout */}
       <div className="flex items-center justify-center gap-4">
         {/* Previous Slide Snippet */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`prev-${getPrevSlideIndex()}`}
-            className="embla__prev-snippet flex-shrink-0"
-            variants={snippetVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            whileHover="hover"
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25,
-            }}
-          >
-            <div className="embla__snippet">
-              <motion.img
-                className="embla__snippet__img"
-                src={`https://picsum.photos/600/350?v=${
-                  slides[getPrevSlideIndex()]
-                }`}
-                alt="Previous slide preview"
-                layoutId={`snippet-prev-${getPrevSlideIndex()}`}
-              />
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          className="embla__prev-snippet flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        >
+          <div className="embla__snippet">
+            <img
+              className="embla__snippet__img"
+              src={`https://picsum.photos/600/350?v=${
+                slides[getPrevSlideIndex()]
+              }`}
+              alt="Previous slide preview"
+            />
+          </div>
+        </motion.div>
 
         {/* Previous Button */}
         <motion.div
           className="flex-shrink-0"
-          variants={buttonVariants}
-          initial="initial"
-          animate="animate"
-          whileHover="hover"
-          whileTap="tap"
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 10,
-          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+          <PrevButton
+            ref={prevButtonRef}
+            onClick={handlePrevClick}
+            disabled={prevBtnDisabled}
+          />
         </motion.div>
 
         {/* Active Slide */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedIndex}
-            className="embla__viewport max-w-2xl"
-            ref={emblaRef}
-            variants={slideVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{
-              duration: 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-            }}
-          >
-            <div className="embla__container">
-              {slides.map((index) => (
-                <div className="embla__slide embla__slide--single" key={index}>
-                  <div className="embla__parallax">
-                    <div className="embla__parallax__layer">
-                      <motion.img
-                        className="embla__slide__img embla__parallax__img"
-                        src={`https://picsum.photos/600/350?v=${index}`}
-                        alt="Your alt text"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </div>
+        <div className="embla__viewport max-w-2xl" ref={emblaRef}>
+          <div className="embla__container">
+            {slides.map((index) => (
+              <div className="embla__slide embla__slide--single" key={index}>
+                <div className="embla__parallax">
+                  <div className="embla__parallax__layer">
+                    <motion.img
+                      className="embla__slide__img embla__parallax__img"
+                      src={`https://picsum.photos/600/350?v=${index}`}
+                      alt="Your alt text"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.3 }}
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Next Button */}
         <motion.div
           className="flex-shrink-0"
-          variants={buttonVariants}
-          initial="initial"
-          animate="animate"
-          whileHover="hover"
-          whileTap="tap"
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 10,
-          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+          <NextButton
+            ref={nextButtonRef}
+            onClick={handleNextClick}
+            disabled={nextBtnDisabled}
+          />
         </motion.div>
 
         {/* Next Slide Snippet */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`next-${getNextSlideIndex()}`}
-            className="embla__next-snippet flex-shrink-0"
-            variants={snippetVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            whileHover="hover"
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25,
-            }}
-          >
-            <div className="embla__snippet">
-              <motion.img
-                className="embla__snippet__img"
-                src={`https://picsum.photos/600/350?v=${
-                  slides[getNextSlideIndex()]
-                }`}
-                alt="Next slide preview"
-                layoutId={`snippet-next-${getNextSlideIndex()}`}
-              />
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          className="embla__next-snippet flex-shrink-0"
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        >
+          <div className="embla__snippet">
+            <img
+              className="embla__snippet__img"
+              src={`https://picsum.photos/600/350?v=${
+                slides[getNextSlideIndex()]
+              }`}
+              alt="Next slide preview"
+            />
+          </div>
+        </motion.div>
       </div>
 
       {/* Dots Navigation */}
-      <motion.div
-        className="embla__dots justify-center mt-6"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.4 }}
-      >
+      <div className="embla__dots justify-center mt-6">
         {scrollSnaps.map((_, index) => (
           <motion.div
             key={index}
@@ -297,8 +289,8 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
             />
           </motion.div>
         ))}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
