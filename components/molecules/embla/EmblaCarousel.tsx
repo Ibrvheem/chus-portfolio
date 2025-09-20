@@ -13,7 +13,7 @@ import {
   PrevButton,
   usePrevNextButtons,
 } from "./EmblaCarouselArrowButtons";
-import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
+import { useDotButton } from "./EmblaCarouselDotButton";
 import "./css/embla.css";
 
 const TWEEN_FACTOR_BASE = 0.2;
@@ -36,8 +36,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
+  const { selectedIndex } = useDotButton(emblaApi);
 
   const {
     prevBtnDisabled,
@@ -134,6 +133,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     };
 
     updateButtonBackgrounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIndex, slides]);
 
   useEffect(() => {
@@ -149,6 +149,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       .on("reInit", tweenParallax)
       .on("scroll", tweenParallax)
       .on("slideFocus", tweenParallax);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emblaApi, tweenParallax]);
 
   // Helper functions

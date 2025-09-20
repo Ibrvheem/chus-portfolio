@@ -1,8 +1,8 @@
 "use client";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-
 import { encode } from "qss";
 import React from "react";
+import Image from "next/image";
 import {
   AnimatePresence,
   motion,
@@ -36,6 +36,7 @@ export const LinkPreview = ({
   isStatic = false,
   imageSrc = "",
 }: LinkPreviewProps) => {
+  console.log(quality, layout);
   let src;
   if (!isStatic) {
     const params = encode({
@@ -67,8 +68,10 @@ export const LinkPreview = ({
 
   const translateX = useSpring(x, springConfig);
 
-  const handleMouseMove = (event: any) => {
-    const targetRect = event.target.getBoundingClientRect();
+  const handleMouseMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const targetRect = (
+      event.target as HTMLAnchorElement
+    ).getBoundingClientRect();
     const eventOffsetX = event.clientX - targetRect.left;
     const offsetFromCenter = (eventOffsetX - targetRect.width / 9) / 2; // Reduce the effect to make it subtle
     x.set(offsetFromCenter);
@@ -78,7 +81,14 @@ export const LinkPreview = ({
     <>
       {isMounted ? (
         <div className="hidden">
-          <img src={src} width={width} height={height} alt="hidden image" />
+          <Image
+            src={src}
+            width={width}
+            height={height}
+            alt="hidden image"
+            style={{ display: "none" }}
+            unoptimized={!isStatic}
+          />
         </div>
       ) : null}
 
@@ -128,12 +138,14 @@ export const LinkPreview = ({
                   className=" w-full block p-1 bg-white inset-0 z-100 border-2 border-transparent shadow rounded-xl hover:border-neutral-200 dark:hover:border-neutral-800"
                   style={{ fontSize: 0 }}
                 >
-                  <img
+                  <Image
                     src={isStatic ? imageSrc : src}
                     width={width}
                     height={height}
-                    className="rounded-lg "
+                    className="rounded-lg"
                     alt="preview image"
+                    style={{ objectFit: "cover" }}
+                    unoptimized={!isStatic}
                   />
                 </a>
               </motion.div>

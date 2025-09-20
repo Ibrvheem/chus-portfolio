@@ -1,4 +1,3 @@
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import AboutMe from "@/components/molecules/about-me";
 import CTAs from "@/components/molecules/ctas";
 import DesignExplorations from "@/components/molecules/design-explorations";
@@ -8,10 +7,7 @@ import MyWork from "@/components/molecules/my-work";
 import Navbar from "@/components/molecules/navbar";
 import SideQuest from "@/components/molecules/side-quest";
 import Testimonials from "@/components/molecules/testimonials";
-import { Button } from "@/components/ui/button";
 import Footer from "@/components/ui/footer";
-import { Download, Phone } from "lucide-react";
-import Image from "next/image";
 
 export default function Home() {
   return (

@@ -1,6 +1,5 @@
 import React from "react";
 import { DirectionAwareHover } from "../ui/direction-aware-hover";
-import { div } from "motion/react-client";
 import { LinkPreview } from "../ui/link-preview";
 
 const projects = [
