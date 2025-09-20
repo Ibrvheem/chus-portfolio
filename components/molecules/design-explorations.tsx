@@ -78,7 +78,7 @@ export default function DesignExplorations() {
   return (
     <div ref={containerRef} className="relative w-full">
       <motion.h1
-        className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-50 py-20"
+        className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-10 py-20"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -133,7 +133,7 @@ function ProjectCard({
       style={{
         y,
         backgroundColor: project.bg,
-        zIndex: index + 1, // Later cards stack on top
+        zIndex: index + 20, // Much higher z-index to stack above title
       }}
       className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl"
     >

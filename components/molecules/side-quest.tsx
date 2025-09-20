@@ -1,8 +1,9 @@
 import React from "react";
+import { PicturesMarquee } from "./pictures-marquee";
 
 export default function SideQuest() {
   return (
-    <div className="grid grid-cols-2 min-h-screen">
+    <div className="grid grid-cols-2 min-h-screen items-center">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-7xl text-left text-white ">
           Side <br />
@@ -25,6 +26,7 @@ export default function SideQuest() {
           </p>
         </div>
       </div>
+      <PicturesMarquee />
     </div>
   );
 }

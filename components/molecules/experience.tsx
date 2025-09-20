@@ -53,7 +53,7 @@ export const Experience = ({
   showArrow = true,
 }: BaseAccordionDemoProps) => {
   return (
-    <div>
+    <div className="min-h-[80vh] flex justify-center flex-col w-full">
       <h1 className="font-gasoek-one text-4xl sm:text-6xl text-left text-white my-16">
         Experiences
       </h1>

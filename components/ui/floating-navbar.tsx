@@ -16,7 +16,7 @@ export const FloatingNav = ({
   navItems: {
     name: string;
     link: string;
-    icon?: JSX.Element;
+    icon?: React.ReactNode;
   }[];
   className?: string;
 }) => {
@@ -67,18 +67,25 @@ export const FloatingNav = ({
           />
         </div>
 
-        {navItems.map((navItem: any, idx: number) => (
-          <a
-            key={`link=${idx}`}
-            href={navItem.link}
-            className={cn("relative  items-center flex  space-x-1 text-white")}
-          >
-            <span className="block sm:hidden">{navItem.icon}</span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
-          </a>
-        ))}
+        {navItems.map(
+          (
+            navItem: { name: string; link: string; icon?: React.ReactNode },
+            idx: number
+          ) => (
+            <a
+              key={`link=${idx}`}
+              href={navItem.link}
+              className={cn(
+                "relative  items-center flex  space-x-1 text-white"
+              )}
+            >
+              <span className="block sm:hidden">{navItem.icon}</span>
+              <span className="hidden sm:block text-sm">{navItem.name}</span>
+            </a>
+          )
+        )}
         <button className="bg-white border text-sm font-medium relative border-neutral-200 text-black px-5 py-3 rounded-full h-full ">
-          <span>LET'S TALK</span>
+          <span>LET&apos;S TALK</span>
         </button>
       </motion.div>
     </AnimatePresence>
