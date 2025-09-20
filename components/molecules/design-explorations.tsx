@@ -119,35 +119,21 @@ function ProjectCard({
 }: ProjectCardProps) {
   // Calculate scroll triggers for each card
   const cardStart = index / total;
-  const cardMid = (index + 0.5) / total;
   const cardEnd = (index + 1) / total;
 
-  // Snap into place when it's the active card
+  // Y position - cards slide up and snap into place
   const y = useTransform(
     scrollProgress,
-    [cardStart, cardMid, cardEnd],
-    [100, 0, -100]
-  );
-
-  const scale = useTransform(
-    scrollProgress,
-    [cardStart, cardMid, cardEnd],
-    [0.9, 1, 0.9]
-  );
-
-  const opacity = useTransform(
-    scrollProgress,
-    [cardStart, cardMid, cardEnd],
-    [0, 1, 0]
+    [cardStart, cardEnd],
+    [100, 0] // Each card moves from below to exact position
   );
 
   return (
     <motion.div
       style={{
         y,
-        scale,
-        opacity,
         backgroundColor: project.bg,
+        zIndex: index + 1, // Later cards stack on top
       }}
       className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl"
     >
