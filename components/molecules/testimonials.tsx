@@ -1,9 +1,11 @@
+"use client";
 import React from "react";
 import { DirectionAwareHover } from "../ui/direction-aware-hover";
 import { div } from "motion/react-client";
 import { LinkPreview } from "../ui/link-preview";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import EmblaCarousel from "@/app/js/EmblaCarousel";
 
 const projects = [
   {
@@ -70,12 +72,21 @@ const projects = [
   },
 ];
 
-export default function DesignExplorations() {
+export default function Testimonials() {
+  const SLIDE_COUNT = 5;
+  const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+
   return (
-    <div className="min-h-[300vh] container mx-auto space-y-16 ">
-      <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
-        What It’s Like to Work With Me?
-      </h1>
+    <div className="min-h-[300vh] mx-auto space-y-16 ">
+      <div className="space-y-4">
+        <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
+          What It’s Like to Work With Me?
+        </h1>
+        <p className="text-xl font-cabinet-grotesk">
+          Words from those I’ve worked with
+        </p>
+        <EmblaCarousel slides={SLIDES} />
+      </div>
     </div>
   );
 }
