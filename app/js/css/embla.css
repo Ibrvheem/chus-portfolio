@@ -101,20 +101,23 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Smooth sliding background image */
+/* Butter smooth parallax background image */
 .embla__button::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
+  top: -10%;
+  left: -10%;
+  right: -10%;
+  bottom: -10%;
+  background-size: 120% 120%;
   background-position: center;
   opacity: 0;
-  transform: translateX(100%);
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(150%) scale(1.2);
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: -1;
+  border-radius: 1.8rem;
+  overflow: hidden;
+  will-change: transform, opacity;
 }
 
 .embla__button:hover {
@@ -132,61 +135,100 @@
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
 }
 
-/* Smooth sliding animations */
+/* Butter smooth parallax animations */
 .embla__button--prev.embla__button--sliding::before {
-  opacity: 0.3;
-  transform: translateX(0);
-  animation: slideInFromLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0.4;
+  transform: translateX(0) scale(1);
+  animation: butterParallaxFromLeft 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .embla__button--next.embla__button--sliding::before {
-  opacity: 0.3;
-  transform: translateX(0);
-  animation: slideInFromRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0.4;
+  transform: translateX(0) scale(1);
+  animation: butterParallaxFromRight 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-@keyframes slideInFromLeft {
+/* Butter smooth parallax keyframes */
+@keyframes butterParallaxFromLeft {
   0% {
     opacity: 0;
-    transform: translateX(-120px) scale(0.8);
+    transform: translateX(-200%) scale(1.3) rotate(-2deg);
+    background-position: 80% center;
   }
-  30% {
+  15% {
     opacity: 0.1;
+    transform: translateX(-120%) scale(1.25) rotate(-1deg);
+    background-position: 70% center;
   }
-  70% {
+  35% {
     opacity: 0.25;
-    transform: translateX(20px) scale(1.05);
+    transform: translateX(-40%) scale(1.15) rotate(-0.5deg);
+    background-position: 60% center;
+  }
+  60% {
+    opacity: 0.35;
+    transform: translateX(10%) scale(1.05) rotate(0.2deg);
+    background-position: 45% center;
+  }
+  80% {
+    opacity: 0.38;
+    transform: translateX(-5%) scale(1.02) rotate(0deg);
+    background-position: 52% center;
   }
   100% {
-    opacity: 0.3;
-    transform: translateX(0) scale(1);
+    opacity: 0.4;
+    transform: translateX(0) scale(1) rotate(0deg);
+    background-position: 50% center;
   }
 }
 
-@keyframes slideInFromRight {
+@keyframes butterParallaxFromRight {
   0% {
     opacity: 0;
-    transform: translateX(120px) scale(0.8);
+    transform: translateX(200%) scale(1.3) rotate(2deg);
+    background-position: 20% center;
   }
-  30% {
+  15% {
     opacity: 0.1;
+    transform: translateX(120%) scale(1.25) rotate(1deg);
+    background-position: 30% center;
   }
-  70% {
+  35% {
     opacity: 0.25;
-    transform: translateX(-20px) scale(1.05);
+    transform: translateX(40%) scale(1.15) rotate(0.5deg);
+    background-position: 40% center;
+  }
+  60% {
+    opacity: 0.35;
+    transform: translateX(-10%) scale(1.05) rotate(-0.2deg);
+    background-position: 55% center;
+  }
+  80% {
+    opacity: 0.38;
+    transform: translateX(5%) scale(1.02) rotate(0deg);
+    background-position: 48% center;
   }
   100% {
-    opacity: 0.3;
-    transform: translateX(0) scale(1);
+    opacity: 0.4;
+    transform: translateX(0) scale(1) rotate(0deg);
+    background-position: 50% center;
   }
 }
 
-/* Reset animation after completion */
+/* Enhanced hover effect for buttons */
+.embla__button:hover .embla__button__svg {
+  transform: scale(1.1);
+}
+
+/* Reset animation with butter smooth transition */
 .embla__button:not(.embla__button--sliding)::before {
-  opacity: 0.2;
-  transform: translateX(0);
+  opacity: 0.25;
+  transform: translateX(0) scale(1);
+  border-radius: 1.8rem;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .embla__dots {
