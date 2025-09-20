@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, PlusIcon, MinusIcon } from "lucide-react";
 
 import {
   Accordion as AccordionPrimitive,
@@ -45,14 +45,34 @@ function AccordionTrigger({
     <AccordionHeaderPrimitive className="flex">
       <AccordionTriggerPrimitive
         className={cn(
-          "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-panel-open]>svg]:rotate-180",
+          "group focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50",
           className
         )}
         {...props}
       >
         {children}
         {showArrow && (
-          <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+          <span className="relative flex h-4 w-4 shrink-0">
+            {/* Plus (visible when closed) */}
+            <PlusIcon
+              aria-hidden
+              className={cn(
+                "absolute inset-0 m-auto size-4 transition-all duration-200 ease-in-out",
+                "group-data-[state=open]:opacity-0 group-data-[state=open]:scale-75 group-data-[state=open]:-translate-y-0.5",
+                "group-data-[panel-open]:opacity-0 group-data-[panel-open]:scale-75 group-data-[panel-open]:-translate-y-0.5"
+              )}
+            />
+
+            {/* Minus (visible when open) */}
+            <MinusIcon
+              aria-hidden
+              className={cn(
+                "absolute inset-0 m-auto size-4 opacity-0 scale-75 transition-all duration-200 ease-in-out",
+                "group-data-[state=open]:opacity-100 group-data-[state=open]:scale-100 group-data-[state=open]:translate-y-0",
+                "group-data-[panel-open]:opacity-100 group-data-[panel-open]:scale-100 group-data-[panel-open]:translate-y-0"
+              )}
+            />
+          </span>
         )}
       </AccordionTriggerPrimitive>
     </AccordionHeaderPrimitive>
