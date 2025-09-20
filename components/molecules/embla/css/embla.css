@@ -1,0 +1,391 @@
+.embla {
+  margin: auto;
+  --slide-height: 60vh;
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+  margin: 0px 10px;
+  padding: 1rem 0; /* Add vertical padding for hover effects */
+}
+
+.embla__viewport {
+  overflow: hidden; /* Changed from hidden to visible */
+  max-width: 100%;
+  padding: 0.5rem; /* Add padding to prevent cutoff */
+  background: #0c121b !important;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla__slide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  padding-left: var(--slide-spacing);
+}
+
+/* Single slide display - shows only active slide */
+.embla__slide--single {
+  flex: 0 0 100%;
+}
+
+.embla__slide__img {
+  border-radius: 1.8rem;
+  display: block;
+  height: var(--slide-height);
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Previous slide snippet styling */
+.embla__prev-snippet {
+  width: 120px;
+  opacity: 0.6;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  transform-origin: center right;
+}
+
+.embla__prev-snippet:hover {
+  opacity: 0.9;
+  transform: scale(1.02) translateX(8px);
+}
+
+/* Next slide snippet styling */
+.embla__next-snippet {
+  width: 120px;
+  opacity: 0.6;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  transform-origin: center left;
+}
+
+.embla__next-snippet:hover {
+  opacity: 0.9;
+  transform: scale(1.02) translateX(-8px);
+}
+
+.embla__snippet {
+  width: 100%;
+  height: var(--slide-height);
+  overflow: hidden;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.embla__snippet__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__snippet:hover .embla__snippet__img {
+  transform: scale(1.08);
+}
+
+.embla__button {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.5);
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 4rem;
+  height: var(--slide-height);
+  z-index: 10;
+  border-radius: 1.8rem;
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Ultra smooth morphing background */
+.embla__button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  border-radius: 1.8rem;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -2;
+  transform: scale(1.1);
+  filter: blur(0px);
+}
+
+/* Overlay for depth */
+.embla__button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  border-radius: 1.8rem;
+  z-index: -1;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.embla__button:hover::before {
+  opacity: 0.3;
+  transform: scale(1.05);
+  filter: blur(1px);
+}
+
+.embla__button:active {
+  transform: translateY(0px);
+  transition: all 0.1s ease-out;
+}
+
+.embla__button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.embla__button__svg {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__button:hover .embla__button__svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* Liquid morphing animation */
+.embla__button--morphing::before {
+  animation: liquidMorph 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.embla__button--prev.embla__button--morphing::before {
+  animation: liquidMorphFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.embla__button--next.embla__button--morphing::before {
+  animation: liquidMorphFromRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes liquidMorphFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px) scale(0.8) skewX(-15deg);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 0.2;
+    transform: translateX(-20px) scale(0.95) skewX(-5deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.35;
+    transform: translateX(8px) scale(1.05) skewX(2deg);
+    filter: blur(0px);
+  }
+  80% {
+    opacity: 0.4;
+    transform: translateX(-2px) scale(1.02) skewX(-1deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0.45;
+    transform: translateX(0) scale(1) skewX(0deg);
+    filter: blur(0px);
+  }
+}
+
+@keyframes liquidMorphFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(60px) scale(0.8) skewX(15deg);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 0.2;
+    transform: translateX(20px) scale(0.95) skewX(5deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.35;
+    transform: translateX(-8px) scale(1.05) skewX(-2deg);
+    filter: blur(0px);
+  }
+  80% {
+    opacity: 0.4;
+    transform: translateX(2px) scale(1.02) skewX(1deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0.45;
+    transform: translateX(0) scale(1) skewX(0deg);
+    filter: blur(0px);
+  }
+}
+
+/* Pulse effect on button press */
+.embla__button--pressed {
+  animation: buttonPulse 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    transform: scale(0.98) translateY(1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  100% {
+    transform: scale(1) translateY(-1px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+.embla__dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.embla__dot {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.5);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__dot:after {
+  box-shadow: inset 0 0 0 0.15rem rgba(255, 255, 255, 0.3);
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  content: "";
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.embla__dot:hover:after {
+  transform: scale(1.3);
+  box-shadow: inset 0 0 0 0.15rem rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.embla__dot--selected:after {
+  box-shadow: inset 0 0 0 0.15rem white;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.5);
+}
+
+.embla__parallax {
+  border-radius: 1.8rem;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__parallax:hover {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 0 12px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+.embla__parallax__layer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.embla__parallax__img {
+  max-width: none;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.embla__parallax:hover .embla__parallax__img {
+  transform: scale(1.05);
+}
+
+/* Smooth appearance animation */
+.embla {
+  animation: smoothAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes smoothAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

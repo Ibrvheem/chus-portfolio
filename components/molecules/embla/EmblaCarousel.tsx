@@ -28,6 +28,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     ...options,
     align: "center",
     containScroll: "trimSnaps",
+    duration: 25, // Smoother default duration
   });
   const tweenFactor = useRef(0);
   const tweenNodes = useRef<HTMLElement[]>([]);
@@ -87,14 +88,16 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
           const translate = diffToTarget * (-1 * tweenFactor.current) * 100;
           const tweenNode = tweenNodes.current[slideIndex];
-          tweenNode.style.transform = `translateX(${translate}%)`;
+          if (tweenNode) {
+            tweenNode.style.transform = `translateX(${translate}%)`;
+          }
         });
       });
     },
     []
   );
 
-  // Update button backgrounds and trigger smooth slide animation
+  // Dynamic background updates with smooth morphing
   useEffect(() => {
     const updateButtonBackgrounds = () => {
       const prevIndex = getPrevSlideIndex();
@@ -104,28 +107,28 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         const prevImageUrl = `url(https://picsum.photos/600/350?v=${slides[prevIndex]})`;
         prevButtonRef.current.style.setProperty("--bg-image", prevImageUrl);
 
-        // Set the background on the pseudo-element
-        const sheet = document.styleSheets[0];
-        const rule = `.embla__button--prev::before { background-image: ${prevImageUrl}; }`;
-        try {
-          sheet.insertRule(rule, sheet.cssRules.length);
-        } catch (e) {
-          // Rule might already exist, that's okay
-        }
+        // Create dynamic style rule
+        const existingStyle = document.getElementById("prev-button-bg");
+        if (existingStyle) existingStyle.remove();
+
+        const style = document.createElement("style");
+        style.id = "prev-button-bg";
+        style.textContent = `.embla__button--prev::before { background-image: ${prevImageUrl}; }`;
+        document.head.appendChild(style);
       }
 
       if (nextButtonRef.current) {
         const nextImageUrl = `url(https://picsum.photos/600/350?v=${slides[nextIndex]})`;
         nextButtonRef.current.style.setProperty("--bg-image", nextImageUrl);
 
-        // Set the background on the pseudo-element
-        const sheet = document.styleSheets[0];
-        const rule = `.embla__button--next::before { background-image: ${nextImageUrl}; }`;
-        try {
-          sheet.insertRule(rule, sheet.cssRules.length);
-        } catch (e) {
-          // Rule might already exist, that's okay
-        }
+        // Create dynamic style rule
+        const existingStyle = document.getElementById("next-button-bg");
+        if (existingStyle) existingStyle.remove();
+
+        const style = document.createElement("style");
+        style.id = "next-button-bg";
+        style.textContent = `.embla__button--next::before { background-image: ${nextImageUrl}; }`;
+        document.head.appendChild(style);
       }
     };
 
@@ -147,39 +150,50 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       .on("slideFocus", tweenParallax);
   }, [emblaApi, tweenParallax]);
 
-  // Helper function to get the previous slide index
+  // Helper functions
   const getPrevSlideIndex = () => {
     return selectedIndex > 0 ? selectedIndex - 1 : slides.length - 1;
   };
 
-  // Helper function to get the next slide index
   const getNextSlideIndex = () => {
     return selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0;
   };
 
-  // Enhanced click handlers with smooth slide animation
+  // Enhanced click handlers with liquid morphing
   const handlePrevClick = () => {
     if (prevButtonRef.current) {
+      // Add morphing animation
       prevButtonRef.current.classList.add(
-        "embla__button--sliding",
-        "embla__button--prev"
+        "embla__button--morphing",
+        "embla__button--pressed"
       );
+
       setTimeout(() => {
-        prevButtonRef.current?.classList.remove("embla__button--sliding");
+        prevButtonRef.current?.classList.remove("embla__button--morphing");
       }, 800);
+
+      setTimeout(() => {
+        prevButtonRef.current?.classList.remove("embla__button--pressed");
+      }, 300);
     }
     onPrevButtonClick();
   };
 
   const handleNextClick = () => {
     if (nextButtonRef.current) {
+      // Add morphing animation
       nextButtonRef.current.classList.add(
-        "embla__button--sliding",
-        "embla__button--next"
+        "embla__button--morphing",
+        "embla__button--pressed"
       );
+
       setTimeout(() => {
-        nextButtonRef.current?.classList.remove("embla__button--sliding");
+        nextButtonRef.current?.classList.remove("embla__button--morphing");
       }, 800);
+
+      setTimeout(() => {
+        nextButtonRef.current?.classList.remove("embla__button--pressed");
+      }, 300);
     }
     onNextButtonClick();
   };
@@ -191,8 +205,14 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         {/* Previous Slide Snippet */}
         <motion.div
           className="embla__prev-snippet flex-shrink-0"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          whileHover={{ scale: 1.02, x: 4 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 25,
+            duration: 0.3,
+          }}
         >
           <div className="embla__snippet">
             <img
@@ -208,9 +228,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         {/* Previous Button */}
         <motion.div
           className="flex-shrink-0"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 500,
+            damping: 25,
+          }}
         >
           <PrevButton
             ref={prevButtonRef}
@@ -220,32 +244,43 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         </motion.div>
 
         {/* Active Slide */}
-        <div className="embla__viewport max-w-2xl" ref={emblaRef}>
+        <motion.div
+          className="embla__viewport max-w-2xl"
+          ref={emblaRef}
+          whileHover={{ scale: 1.01 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+          }}
+        >
           <div className="embla__container">
             {slides.map((index) => (
               <div className="embla__slide embla__slide--single" key={index}>
                 <div className="embla__parallax">
                   <div className="embla__parallax__layer">
-                    <motion.img
+                    <img
                       className="embla__slide__img embla__parallax__img"
                       src={`https://picsum.photos/600/350?v=${index}`}
                       alt="Your alt text"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.3 }}
                     />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Next Button */}
         <motion.div
           className="flex-shrink-0"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 500,
+            damping: 25,
+          }}
         >
           <NextButton
             ref={nextButtonRef}
@@ -257,8 +292,14 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         {/* Next Slide Snippet */}
         <motion.div
           className="embla__next-snippet flex-shrink-0"
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          whileHover={{ scale: 1.02, x: -4 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 25,
+            duration: 0.3,
+          }}
         >
           <div className="embla__snippet">
             <img
@@ -273,13 +314,17 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       </div>
 
       {/* Dots Navigation */}
-      <div className="embla__dots justify-center mt-6">
+      <div className="embla__dots justify-center">
         {scrollSnaps.map((_, index) => (
           <motion.div
             key={index}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 20,
+            }}
           >
             <DotButton
               onClick={() => onDotButtonClick(index)}

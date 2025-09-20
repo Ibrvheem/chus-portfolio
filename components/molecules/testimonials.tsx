@@ -5,7 +5,7 @@ import { div } from "motion/react-client";
 import { LinkPreview } from "../ui/link-preview";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import EmblaCarousel from "@/app/js/EmblaCarousel";
+import EmblaCarousel from "@/components/molecules/embla/EmblaCarousel";
 
 const projects = [
   {
@@ -77,7 +77,7 @@ export default function Testimonials() {
   const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
   return (
-    <div className="min-h-[300vh] mx-auto space-y-16 ">
+    <div className="min-h-screen mx-auto space-y-16 ">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
           What It’s Like to Work With Me?

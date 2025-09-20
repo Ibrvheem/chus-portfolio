@@ -5,6 +5,7 @@ import { DraggableCardDemo } from "@/components/molecules/draggable-card";
 import { Experience } from "@/components/molecules/experience";
 import MyWork from "@/components/molecules/my-work";
 import Navbar from "@/components/molecules/navbar";
+import SideQuest from "@/components/molecules/side-quest";
 import Testimonials from "@/components/molecules/testimonials";
 import { Button } from "@/components/ui/button";
 import { Download, Phone } from "lucide-react";
@@ -54,6 +55,7 @@ export default function Home() {
         <DesignExplorations />
         <Experience />
         <Testimonials />
+        <SideQuest />
       </div>
     </div>
   );
