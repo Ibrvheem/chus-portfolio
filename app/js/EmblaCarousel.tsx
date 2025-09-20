@@ -23,7 +23,11 @@ type PropType = {
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { slides, options } = props;
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    ...options,
+    align: "center",
+    containScroll: "trimSnaps",
+  });
   const tweenFactor = useRef(0);
   const tweenNodes = useRef<HTMLElement[]>([]);
 
@@ -102,43 +106,69 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       .on("slideFocus", tweenParallax);
   }, [emblaApi, tweenParallax]);
 
+  // Helper function to get the next slide index
+  const getNextSlideIndex = () => {
+    return selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0;
+  };
+
   return (
     <div className="embla">
-      <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container">
-          {slides.map((index) => (
-            <div className="embla__slide" key={index}>
-              <div className="embla__parallax">
-                <div className="embla__parallax__layer">
-                  <img
-                    className="embla__slide__img embla__parallax__img"
-                    src={`https://picsum.photos/600/350?v=${index}`}
-                    alt="Your alt text"
-                  />
+      {/* Navigation layout: Prev Button | Active Slide | Next Button | Next Snippet */}
+      <div className="flex items-center justify-center gap-4">
+        {/* Previous Button */}
+        <div className="flex-shrink-0">
+          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+        </div>
+
+        {/* Active Slide Only */}
+        <div className="embla__viewport max-w-2xl" ref={emblaRef}>
+          <div className="embla__container">
+            {slides.map((index) => (
+              <div className="embla__slide embla__slide--single" key={index}>
+                <div className="embla__parallax">
+                  <div className="embla__parallax__layer">
+                    <img
+                      className="embla__slide__img embla__parallax__img"
+                      src={`https://picsum.photos/600/350?v=${index}`}
+                      alt="Your alt text"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="embla__controls">
-        <div className="embla__buttons">
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+        {/* Next Button */}
+        <div className="flex-shrink-0">
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
         </div>
 
-        <div className="embla__dots">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              className={"embla__dot".concat(
-                index === selectedIndex ? " embla__dot--selected" : ""
-              )}
+        {/* Next Slide Snippet */}
+        <div className="embla__next-snippet flex-shrink-0">
+          <div className="embla__snippet">
+            <img
+              className="embla__snippet__img"
+              src={`https://picsum.photos/600/350?v=${
+                slides[getNextSlideIndex()]
+              }`}
+              alt="Next slide preview"
             />
-          ))}
+          </div>
         </div>
+      </div>
+
+      {/* Dots Navigation */}
+      <div className="embla__dots justify-center mt-6">
+        {scrollSnaps.map((_, index) => (
+          <DotButton
+            key={index}
+            onClick={() => onDotButtonClick(index)}
+            className={"embla__dot".concat(
+              index === selectedIndex ? " embla__dot--selected" : ""
+            )}
+          />
+        ))}
       </div>
     </div>
   );
