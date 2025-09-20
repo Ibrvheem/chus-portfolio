@@ -63,7 +63,7 @@ export const Experience = ({
             key={index}
             value={`item-${index + 1}`}
             className={
-              "mt-2 border  px-4 rounded-[40px] bg-white/5 border-white/10"
+              "mt-4 border  px-4 rounded-[40px] bg-white/5 border-white/10 "
             }
           >
             <AccordionTrigger showArrow={showArrow}>
