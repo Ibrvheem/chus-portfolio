@@ -1,9 +1,7 @@
-import React from "react";
-import { DirectionAwareHover } from "../ui/direction-aware-hover";
-import { div } from "motion/react-client";
-import { LinkPreview } from "../ui/link-preview";
+"use client";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 
 const projects = [
   {
@@ -18,7 +16,7 @@ const projects = [
   {
     imageUrl: "/assets/menuhelp.png",
     description: "Menu Help",
-    width: "100&",
+    width: "100%",
     website: "",
     bg: "#FF2001",
     year: "2025",
@@ -71,43 +69,153 @@ const projects = [
 ];
 
 export default function DesignExplorations() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
   return (
-    <div className="min-h-[300vh] container mx-auto space-y-16 ">
-      <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
+    <div ref={containerRef} className="relative w-full">
+      <motion.h1
+        className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-50 py-20"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
         Design Explorations
-      </h1>
-      <div className="flex flex-wrap gap-8">
-        {projects.map((project, idx) => (
-          <div
-            key={idx}
-            style={{ width: project.width, background: project.bg }}
-            className="flex-grow relative overflow-visible p-6 rounded-md "
-          >
-            <div className="border-b my-4 pb-6 font-cabinet-grotesk flex justify-between items-center">
-              <h1 className="text-left text-4xl font-medium">
-                {project.description}
-              </h1>
-              <div className="flex items-center font-cabinet-grotesk font-medium text-white/80 gap-2 text-lg">
-                <div>{project.year}</div>
-                <div className="h-2 w-2 rounded-full bg-white/50" />
-                UI/UX
-                <div className="h-2 w-2 rounded-full bg-white/50" />
-                <div>{project.category}</div>
-              </div>
-            </div>
-            <div className="relative  overflow-hidden mt-8">
-              <div className="absolute inset-0  bg-black/50 " />
-              <Image
-                width={10000}
-                height={10000}
-                className="h-[70vh] w-full object-cover "
-                src={project.imageUrl}
-                alt={project.description}
-              />
-            </div>
-          </div>
+      </motion.h1>
+
+      <div
+        className="relative w-full"
+        style={{ height: `${projects.length * 100}vh` }}
+      >
+        {projects.map((project, index) => (
+          <ProjectCard
+            key={index}
+            project={project}
+            index={index}
+            total={projects.length}
+            scrollProgress={scrollYProgress}
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+interface ProjectCardProps {
+  project: (typeof projects)[0];
+  index: number;
+  total: number;
+  scrollProgress: import("framer-motion").MotionValue<number>;
+}
+
+function ProjectCard({
+  project,
+  index,
+  total,
+  scrollProgress,
+}: ProjectCardProps) {
+  // Calculate scroll triggers for each card
+  const cardStart = index / total;
+  const cardMid = (index + 0.5) / total;
+  const cardEnd = (index + 1) / total;
+
+  // Snap into place when it's the active card
+  const y = useTransform(
+    scrollProgress,
+    [cardStart, cardMid, cardEnd],
+    [100, 0, -100]
+  );
+
+  const scale = useTransform(
+    scrollProgress,
+    [cardStart, cardMid, cardEnd],
+    [0.9, 1, 0.9]
+  );
+
+  const opacity = useTransform(
+    scrollProgress,
+    [cardStart, cardMid, cardEnd],
+    [0, 1, 0]
+  );
+
+  return (
+    <motion.div
+      style={{
+        y,
+        scale,
+        opacity,
+        backgroundColor: project.bg,
+      }}
+      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden shadow-2xl"
+    >
+      <div className="p-6 md:p-8 h-full flex flex-col">
+        {/* Header */}
+        <div className="border-b border-white/20 pb-4 md:pb-6 font-cabinet-grotesk flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <h1 className="text-left text-2xl md:text-4xl font-medium text-white leading-tight">
+            {project.description}
+          </h1>
+          <div className="flex items-center font-cabinet-grotesk font-medium text-white/80 gap-2 text-sm md:text-lg flex-wrap">
+            <div>{project.year}</div>
+            <div className="h-2 w-2 rounded-full bg-white/50" />
+            <span>UI/UX</span>
+            <div className="h-2 w-2 rounded-full bg-white/50" />
+            <div className="text-xs md:text-base">{project.category}</div>
+          </div>
+        </div>
+
+        {/* Image Container */}
+        <motion.div
+          className="relative overflow-hidden mt-6 md:mt-8 rounded-xl flex-1"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.div
+            className="absolute inset-0 bg-black/30 z-10"
+            whileHover={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+
+          <motion.div
+            className="h-full w-full"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image
+              width={1200}
+              height={800}
+              className="h-full w-full object-cover"
+              src={project.imageUrl}
+              alt={project.description}
+              priority={index < 3}
+            />
+          </motion.div>
+
+          {/* Hover Overlay */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-20 flex items-end p-6 opacity-0"
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              whileHover={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="text-white"
+            >
+              <p className="text-sm font-cabinet-grotesk opacity-80 mb-2">
+                Project Details
+              </p>
+              <h3 className="text-xl font-medium">{project.description}</h3>
+              <p className="text-sm opacity-70 mt-1">
+                {project.category} • {project.year}
+              </p>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </motion.div>
   );
 }
