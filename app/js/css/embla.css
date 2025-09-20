@@ -33,17 +33,19 @@
   height: var(--slide-height);
   width: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Previous slide snippet styling */
+.embla__prev-snippet {
+  width: 120px;
+  cursor: pointer;
 }
 
 /* Next slide snippet styling */
 .embla__next-snippet {
   width: 120px;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-
-.embla__next-snippet:hover {
-  opacity: 0.8;
+  cursor: pointer;
 }
 
 .embla__snippet {
@@ -52,6 +54,14 @@
   overflow: hidden;
   border-radius: 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.embla__snippet:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .embla__snippet__img {
@@ -59,6 +69,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
 }
 
 .embla__button {
@@ -66,7 +77,7 @@
   -webkit-appearance: none;
   appearance: none;
   background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   touch-action: manipulation;
   display: inline-flex;
   text-decoration: none;
@@ -74,37 +85,41 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0;
   margin: 0;
-  width: 3rem;
-  height: 3rem;
+  width: 3.5rem;
+  height: 3.5rem;
   z-index: 1;
   border-radius: 50%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .embla__button:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .embla__button:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
+  transform: none !important;
 }
 
 .embla__button__svg {
-  width: 35%;
-  height: 35%;
+  width: 40%;
+  height: 40%;
+  transition: transform 0.2s ease;
 }
 
 .embla__dots {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .embla__dot {
@@ -119,12 +134,13 @@
   border: 0;
   padding: 0;
   margin: 0;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 3rem;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
 .embla__dot:after {
@@ -135,18 +151,25 @@
   display: flex;
   align-items: center;
   content: "";
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .embla__dot--selected:after {
   box-shadow: inset 0 0 0 0.2rem white;
-  transform: scale(1.2);
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
 }
 
 .embla__parallax {
   border-radius: 1.8rem;
   height: 100%;
   overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.embla__parallax:hover {
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
 }
 
 .embla__parallax__layer {
@@ -161,4 +184,31 @@
   max-width: none;
   width: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Smooth loading animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.embla__slide img {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Custom scrollbar for webkit browsers */
+.embla__container::-webkit-scrollbar {
+  display: none;
+}
+
+.embla__container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

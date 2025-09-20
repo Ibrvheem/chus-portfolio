@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   EmblaCarouselType,
   EmblaEventType,
@@ -106,71 +107,198 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       .on("slideFocus", tweenParallax);
   }, [emblaApi, tweenParallax]);
 
+  // Helper function to get the previous slide index
+  const getPrevSlideIndex = () => {
+    return selectedIndex > 0 ? selectedIndex - 1 : slides.length - 1;
+  };
+
   // Helper function to get the next slide index
   const getNextSlideIndex = () => {
     return selectedIndex < slides.length - 1 ? selectedIndex + 1 : 0;
   };
 
-  return (
-    <div className="embla">
-      {/* Navigation layout: Prev Button | Active Slide | Next Button | Next Snippet */}
-      <div className="flex items-center justify-center gap-4">
-        {/* Previous Button */}
-        <div className="flex-shrink-0">
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-        </div>
+  // Animation variants
+  const snippetVariants = {
+    initial: { scale: 0.8, opacity: 0, x: 20 },
+    animate: { scale: 1, opacity: 0.6, x: 0 },
+    hover: { scale: 1.05, opacity: 0.8 },
+    exit: { scale: 0.8, opacity: 0, x: -20 },
+  };
 
-        {/* Active Slide Only */}
-        <div className="embla__viewport max-w-2xl" ref={emblaRef}>
-          <div className="embla__container">
-            {slides.map((index) => (
-              <div className="embla__slide embla__slide--single" key={index}>
-                <div className="embla__parallax">
-                  <div className="embla__parallax__layer">
-                    <img
-                      className="embla__slide__img embla__parallax__img"
-                      src={`https://picsum.photos/600/350?v=${index}`}
-                      alt="Your alt text"
-                    />
+  const buttonVariants = {
+    initial: { scale: 0.8, opacity: 0 },
+    animate: { scale: 1, opacity: 1 },
+    hover: { scale: 1.1, rotate: 5 },
+    tap: { scale: 0.95 },
+  };
+
+  const slideVariants = {
+    initial: { scale: 0.9, opacity: 0 },
+    animate: { scale: 1, opacity: 1 },
+    exit: { scale: 0.9, opacity: 0 },
+  };
+
+  return (
+    <motion.div
+      className="embla"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      {/* Navigation layout */}
+      <div className="flex items-center justify-center gap-4">
+        {/* Previous Slide Snippet */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`prev-${getPrevSlideIndex()}`}
+            className="embla__prev-snippet flex-shrink-0"
+            variants={snippetVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            whileHover="hover"
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+            }}
+          >
+            <div className="embla__snippet">
+              <motion.img
+                className="embla__snippet__img"
+                src={`https://picsum.photos/600/350?v=${
+                  slides[getPrevSlideIndex()]
+                }`}
+                alt="Previous slide preview"
+                layoutId={`snippet-prev-${getPrevSlideIndex()}`}
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Previous Button */}
+        <motion.div
+          className="flex-shrink-0"
+          variants={buttonVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          whileTap="tap"
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 10,
+          }}
+        >
+          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+        </motion.div>
+
+        {/* Active Slide */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedIndex}
+            className="embla__viewport max-w-2xl"
+            ref={emblaRef}
+            variants={slideVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{
+              duration: 0.5,
+              ease: [0.25, 0.46, 0.45, 0.94],
+            }}
+          >
+            <div className="embla__container">
+              {slides.map((index) => (
+                <div className="embla__slide embla__slide--single" key={index}>
+                  <div className="embla__parallax">
+                    <div className="embla__parallax__layer">
+                      <motion.img
+                        className="embla__slide__img embla__parallax__img"
+                        src={`https://picsum.photos/600/350?v=${index}`}
+                        alt="Your alt text"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Next Button */}
-        <div className="flex-shrink-0">
+        <motion.div
+          className="flex-shrink-0"
+          variants={buttonVariants}
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          whileTap="tap"
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 10,
+          }}
+        >
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-        </div>
+        </motion.div>
 
         {/* Next Slide Snippet */}
-        <div className="embla__next-snippet flex-shrink-0">
-          <div className="embla__snippet">
-            <img
-              className="embla__snippet__img"
-              src={`https://picsum.photos/600/350?v=${
-                slides[getNextSlideIndex()]
-              }`}
-              alt="Next slide preview"
-            />
-          </div>
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`next-${getNextSlideIndex()}`}
+            className="embla__next-snippet flex-shrink-0"
+            variants={snippetVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            whileHover="hover"
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 25,
+            }}
+          >
+            <div className="embla__snippet">
+              <motion.img
+                className="embla__snippet__img"
+                src={`https://picsum.photos/600/350?v=${
+                  slides[getNextSlideIndex()]
+                }`}
+                alt="Next slide preview"
+                layoutId={`snippet-next-${getNextSlideIndex()}`}
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Dots Navigation */}
-      <div className="embla__dots justify-center mt-6">
+      <motion.div
+        className="embla__dots justify-center mt-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
+      >
         {scrollSnaps.map((_, index) => (
-          <DotButton
+          <motion.div
             key={index}
-            onClick={() => onDotButtonClick(index)}
-            className={"embla__dot".concat(
-              index === selectedIndex ? " embla__dot--selected" : ""
-            )}
-          />
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <DotButton
+              onClick={() => onDotButtonClick(index)}
+              className={"embla__dot".concat(
+                index === selectedIndex ? " embla__dot--selected" : ""
+              )}
+            />
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
