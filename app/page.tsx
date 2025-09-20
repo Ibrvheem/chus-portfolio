@@ -2,6 +2,7 @@ import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-b
 import AboutMe from "@/components/molecules/about-me";
 import DesignExplorations from "@/components/molecules/design-explorations";
 import { DraggableCardDemo } from "@/components/molecules/draggable-card";
+import { Experience } from "@/components/molecules/experience";
 import MyWork from "@/components/molecules/my-work";
 import Navbar from "@/components/molecules/navbar";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ export default function Home() {
         <AboutMe />
         <MyWork />
         <DesignExplorations />
+        <Experience />
       </div>
     </div>
   );
