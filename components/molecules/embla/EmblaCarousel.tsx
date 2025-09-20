@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   EmblaCarouselType,
@@ -215,12 +216,15 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           }}
         >
           <div className="embla__snippet">
-            <img
+            <Image
               className="embla__snippet__img"
               src={`https://picsum.photos/600/350?v=${
                 slides[getPrevSlideIndex()]
               }`}
               alt="Previous slide preview"
+              width={600}
+              height={350}
+              priority
             />
           </div>
         </motion.div>
@@ -259,10 +263,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               <div className="embla__slide embla__slide--single" key={index}>
                 <div className="embla__parallax">
                   <div className="embla__parallax__layer">
-                    <img
+                    <Image
                       className="embla__slide__img embla__parallax__img"
                       src={`https://picsum.photos/600/350?v=${index}`}
                       alt="Your alt text"
+                      width={600}
+                      height={350}
+                      priority
                     />
                   </div>
                 </div>
@@ -273,7 +280,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
         {/* Next Button */}
         <motion.div
-          className="flex-shrink-0"
+          className=" flex-shrink-0"
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98, y: 0 }}
           transition={{
@@ -291,7 +298,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
         {/* Next Slide Snippet */}
         <motion.div
-          className="embla__next-snippet flex-shrink-0"
+          className="embla__next-snippet  flex-shrink-0"
           whileHover={{ scale: 1.02, x: -4 }}
           whileTap={{ scale: 0.98 }}
           transition={{
@@ -302,38 +309,18 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           }}
         >
           <div className="embla__snippet">
-            <img
+            <Image
               className="embla__snippet__img"
               src={`https://picsum.photos/600/350?v=${
                 slides[getNextSlideIndex()]
               }`}
               alt="Next slide preview"
+              width={600}
+              height={350}
+              priority
             />
           </div>
         </motion.div>
-      </div>
-
-      {/* Dots Navigation */}
-      <div className="embla__dots justify-center">
-        {scrollSnaps.map((_, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 20,
-            }}
-          >
-            <DotButton
-              onClick={() => onDotButtonClick(index)}
-              className={"embla__dot".concat(
-                index === selectedIndex ? " embla__dot--selected" : ""
-              )}
-            />
-          </motion.div>
-        ))}
       </div>
     </div>
   );

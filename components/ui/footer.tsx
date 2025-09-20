@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
+import { easeInOut, motion } from "framer-motion";
 import CTAs from "../molecules/ctas";
 import {} from "react-icons/fa";
 import {
@@ -10,6 +10,7 @@ import {
   FaBehance,
   FaMedium,
 } from "react-icons/fa6";
+import { ArrowUp } from "lucide-react";
 
 const socialIcons = [
   { icon: FaLinkedinIn, href: "#", label: "LinkedIn", color: "#0077B5" },
@@ -42,7 +43,7 @@ const iconVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
+      ease: easeInOut, // ✅ use easing function, not string
     },
   },
   hover: {
@@ -50,7 +51,7 @@ const iconVariants = {
     y: -5,
     transition: {
       duration: 0.3,
-      ease: [0.16, 1, 0.3, 1],
+      ease: easeInOut,
     },
   },
   tap: {
@@ -71,7 +72,7 @@ const liquidFillVariants = {
     opacity: 1,
     transition: {
       duration: 0.4,
-      ease: [0.16, 1, 0.3, 1],
+      ease: easeInOut,
     },
   },
   exit: {
@@ -79,14 +80,14 @@ const liquidFillVariants = {
     opacity: 0,
     transition: {
       duration: 0.3,
-      ease: [0.16, 1, 0.3, 1],
+      ease: easeInOut, // use easing function instead of array
     },
   },
 };
 
 export default function Footer() {
   return (
-    <div className="min-h-[50vh] flex justify-around flex-col">
+    <div className="min-h-[40vh] flex justify-around flex-col">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-7xl text-center text-white">
           Let&apos;s Connect
@@ -110,47 +111,54 @@ export default function Footer() {
             <p className="text-lg">amiinarabiu20@gmail.com</p>
           </div>
         </div>
-        <motion.div
-          className="socials flex gap-6 text-4xl text-white"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          {socialIcons.map((social, index) => {
-            const IconComponent = social.icon;
-            return (
-              <motion.a
-                key={index}
-                href={social.href}
-                aria-label={social.label}
-                className="relative p-3 rounded-full border border-white/50 bg-white/10 backdrop-blur-sm cursor-pointer block overflow-hidden group"
-                variants={iconVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                {/* Liquid Fill Background */}
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: social.color }}
-                  variants={liquidFillVariants}
-                  initial="initial"
+        <div>
+          <motion.div
+            className="socials flex gap-6 text-4xl text-white"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            {socialIcons.map((social, index) => {
+              const IconComponent = social.icon;
+              return (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="relative p-3 rounded-full border border-white/50 bg-white/10 backdrop-blur-sm cursor-pointer block overflow-hidden group"
+                  variants={iconVariants}
                   whileHover="hover"
-                  exit="exit"
-                />
-
-                {/* Icon */}
-                <motion.div
-                  className="relative z-10 transition-colors duration-300"
-                  whileHover={{ color: "#ffffff" }}
+                  whileTap="tap"
                 >
-                  <IconComponent className="text-xl" />
-                </motion.div>
-              </motion.a>
-            );
-          })}
-        </motion.div>
+                  {/* Liquid Fill Background */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{ backgroundColor: social.color }}
+                    variants={liquidFillVariants}
+                    initial="initial"
+                    whileHover="hover"
+                    exit="exit"
+                  />
+
+                  {/* Icon */}
+                  <motion.div
+                    className="relative z-10 transition-colors duration-300"
+                    whileHover={{ color: "#ffffff" }}
+                  >
+                    <IconComponent className="text-xl" />
+                  </motion.div>
+                </motion.a>
+              );
+            })}
+          </motion.div>
+        </div>
       </div>
+      <a href="#">
+        <div className="bg-white text-primary w-fit p-3 rounded-full ml-auto animate-bounce">
+          <ArrowUp />
+        </div>
+      </a>
     </div>
   );
 }
