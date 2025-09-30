@@ -10,10 +10,10 @@ export default function Testimonials() {
     <div className="min-h-screen mx-auto space-y-16 " id="testimonials">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
-          What It's Like to Work With Me?
+          What It&lsquo;s Like to Work With Me?
         </h1>
         <p className="text-xl font-cabinet-grotesk text-center text-white/70">
-          Words from those I've worked with
+          Words from those I&lsquo;ve worked with
         </p>
         <Carousel items={cards} />
       </div>
@@ -70,7 +70,7 @@ const DummyContent = ({
 const data = [
   {
     category: "UI/UX Designer & Product Strategist",
-    title: "Alim",
+    title: "Abdulalim",
     src: `https://image.mux.com/Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs/thumbnail.png`,
     content: (
       <DummyContent
