@@ -95,10 +95,10 @@ const data = [
   {
     category: "Creative Director",
     title: "Kleis",
-    src: `https://image.mux.com/StFrRMK02HHzdrCitZvJQ9H5v000232k02YGlojKDYfnVzU/thumbnail.png?width=360&height=640&fit_mode=crop`,
+    src: `https://image.mux.com/xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI/thumbnail.png?width=360&height=640&fit_mode=crop`,
     content: (
       <DummyContent
-        videoId="StFrRMK02HHzdrCitZvJQ9H5v000232k02YGlojKDYfnVzU"
+        videoId="xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI"
         clientName="Kleis"
         testimonialText="Creative problem-solving at its finest. The design solutions were innovative and perfectly aligned with our brand goals."
       />

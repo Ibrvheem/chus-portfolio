@@ -241,7 +241,28 @@ export const Card = ({
             </button>
 
             {/* Video iframe */}
-            <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden bg-black">
+            <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden">
+              {/* Blurred background layer for horizontal videos */}
+              <iframe
+                src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1&muted=1`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                title={`${card.title} Background`}
+                style={{
+                  border: "none",
+                  outline: "none",
+                  position: "absolute",
+                  top: "0",
+                  left: "0",
+                  width: "100%",
+                  height: "100%",
+                  filter: "blur(20px) brightness(0.7)",
+                  transform: "scale(1.1)",
+                  zIndex: 1,
+                }}
+              />
+
+              {/* Main video layer - cropped to portrait */}
               <iframe
                 src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1`}
                 frameBorder="0"
@@ -254,10 +275,11 @@ export const Card = ({
                   position: "absolute",
                   top: "50%",
                   left: "50%",
-                  width: "100%", // Increased size to ensure full coverage
-                  height: "100%", // Increased height as well
-                  transform: "translate(-50%, -50%) scale(1.1)", // Additional scale for safety
+                  width: "100%",
+                  height: "177.78%", // Portrait crop (16:9 to 9:16)
+                  transform: "translate(-50%, -50%)",
                   transformOrigin: "center center",
+                  zIndex: 2,
                 }}
               />
             </div>
