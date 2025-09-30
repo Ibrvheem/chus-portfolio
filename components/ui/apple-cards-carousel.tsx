@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
@@ -21,9 +21,13 @@ type Card = {
 export const CarouselContext = createContext<{
   onCardClose: (index: number) => void;
   currentIndex: number;
+  playingVideoIndex: number | null;
+  setPlayingVideoIndex: (index: number | null) => void;
 }>({
   onCardClose: () => {},
   currentIndex: 0,
+  playingVideoIndex: null,
+  setPlayingVideoIndex: () => {},
 });
 
 export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
@@ -31,6 +35,9 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -78,7 +85,12 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   return (
     <CarouselContext.Provider
-      value={{ onCardClose: handleCardClose, currentIndex }}
+      value={{
+        onCardClose: handleCardClose,
+        currentIndex,
+        playingVideoIndex,
+        setPlayingVideoIndex,
+      }}
     >
       <div className="relative w-full">
         <div
@@ -144,13 +156,24 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
 export const Card = ({
   card,
+  index,
   layout = false,
 }: {
   card: Card;
   index: number;
   layout?: boolean;
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { playingVideoIndex, setPlayingVideoIndex } =
+    useContext(CarouselContext);
+  const isPlaying = playingVideoIndex === index;
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+
+  // Reset video loaded state when playback stops
+  React.useEffect(() => {
+    if (!isPlaying) {
+      setIsVideoLoaded(false);
+    }
+  }, [isPlaying]);
 
   // Extract video ID from the Mux thumbnail URL
   const getVideoId = () => {
@@ -160,11 +183,15 @@ export const Card = ({
 
   // Handler for direct video playback on the card
   const handleVideoPlay = () => {
-    setIsPlaying(true);
+    setPlayingVideoIndex(index); // Set this card as the playing one
   };
 
   const handleVideoStop = () => {
-    setIsPlaying(false);
+    setPlayingVideoIndex(null); // Stop all videos
+  };
+
+  const handleVideoLoad = () => {
+    setIsVideoLoaded(true);
   };
 
   const videoId = getVideoId();
@@ -217,9 +244,56 @@ export const Card = ({
         layoutId={layout ? `card-${card.title}` : undefined}
         className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10 group"
       >
-        {/* Video Player or Thumbnail */}
-        {isPlaying && videoId ? (
-          <div className="absolute inset-0 z-30">
+        {/* Always show thumbnail as base layer */}
+        <div className="absolute inset-0 z-10">
+          <div className="absolute h-full bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-30 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 z-40 p-8">
+            <motion.p
+              layoutId={layout ? `title-${card.title}` : undefined}
+              className="text-white text-sm md:text-base font-cabinet-grotesk font-medium max-w-xs text-left [text-wrap:balance]"
+            >
+              {card.title}
+            </motion.p>
+            <motion.p
+              layoutId={layout ? `category-${card.category}` : undefined}
+              className="text-left font-cabinet-grotesk text-sm font-medium text-white md:text-sm"
+            >
+              {card.category}
+            </motion.p>
+          </div>
+          <BlurImage
+            src={card.src}
+            alt={card.title}
+            fill
+            className="absolute inset-0 z-10 object-cover rounded-3xl"
+          />
+        </div>
+
+        {/* Play button overlay - only show when NOT playing */}
+        {!isPlaying && (
+          <button
+            onClick={handleVideoPlay}
+            className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 z-20 flex items-center justify-center"
+          >
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full p-4">
+              <svg
+                className="w-8 h-8 text-black"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </button>
+        )}
+
+        {/* Video Player - shows on top when playing and loaded */}
+        {isPlaying && videoId && (
+          <div
+            className={`absolute inset-0 z-30 transition-opacity duration-300 ${
+              isVideoLoaded ? "opacity-100" : "opacity-0"
+            }`}
+          >
             {/* Close button */}
             <button
               onClick={handleVideoStop}
@@ -248,6 +322,7 @@ export const Card = ({
                 frameBorder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 title={`${card.title} Background`}
+                onLoad={handleVideoLoad}
                 style={{
                   border: "none",
                   outline: "none",
@@ -284,46 +359,6 @@ export const Card = ({
               />
             </div>
           </div>
-        ) : (
-          <>
-            {/* Play button overlay */}
-            <button
-              onClick={handleVideoPlay}
-              className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 z-20 flex items-center justify-center"
-            >
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full p-4">
-                <svg
-                  className="w-8 h-8 text-black"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </button>
-
-            <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-            <div className="relative z-40 p-8">
-              <motion.p
-                layoutId={layout ? `title-${card.title}` : undefined}
-                className="text-white text-sm md:text-base font-cabinet-grotesk font-medium max-w-xs text-left [text-wrap:balance]"
-              >
-                {card.title}
-              </motion.p>
-              <motion.p
-                layoutId={layout ? `category-${card.category}` : undefined}
-                className="text-left font-cabinet-grotesk text-sm font-medium text-white md:text-sm"
-              >
-                {card.category}
-              </motion.p>
-            </div>
-            <BlurImage
-              src={card.src}
-              alt={card.title}
-              fill
-              className="absolute inset-0 z-10 object-cover rounded-3xl"
-            />
-          </>
         )}
       </motion.div>
     </>

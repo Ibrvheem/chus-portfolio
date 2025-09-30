@@ -40,7 +40,7 @@ const DummyContent = ({
           >
             <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto mb-6">
               <span className="font-bold text-neutral-700 dark:text-neutral-200">
-                "{testimonialText}"
+                {testimonialText}
               </span>{" "}
               - {clientName}
             </p>
@@ -71,7 +71,7 @@ const data = [
   {
     category: "UI/UX Designer & Product Strategist",
     title: "Alim",
-    src: `https://image.mux.com/Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs/thumbnail.png?width=360&height=640&fit_mode=crop`,
+    src: `https://image.mux.com/Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs/thumbnail.png`,
     content: (
       <DummyContent
         videoId="Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs"
@@ -83,7 +83,7 @@ const data = [
   {
     category: "Senior Product Manager",
     title: "Mackenzie",
-    src: `https://image.mux.com/01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo/thumbnail.png?width=360&height=640&fit_mode=crop`,
+    src: `https://image.mux.com/01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo/thumbnail.png`,
     content: (
       <DummyContent
         videoId="01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo"
@@ -95,7 +95,7 @@ const data = [
   {
     category: "Creative Director",
     title: "Kleis",
-    src: `https://image.mux.com/xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI/thumbnail.png?width=360&height=640&fit_mode=crop`,
+    src: `https://image.mux.com/xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI/thumbnail.png`,
     content: (
       <DummyContent
         videoId="xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI"
@@ -107,7 +107,7 @@ const data = [
   {
     category: "Tech Startup Founder",
     title: "Bash",
-    src: `https://image.mux.com/ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY/thumbnail.png?width=360&height=640&fit_mode=crop`,
+    src: `https://image.mux.com/ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY/thumbnail.png`,
     content: (
       <DummyContent
         videoId="ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY"
