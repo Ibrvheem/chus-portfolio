@@ -1,7 +1,155 @@
 "use client";
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
+
+// Custom Cursor Component
+function CustomCursor({ color }: { color?: string }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
+  // Smooth spring animations for cursor movement
+  const springConfig = { damping: 25, stiffness: 700, mass: 0.5 };
+  const cursorX = useSpring(0, springConfig);
+  const cursorY = useSpring(0, springConfig);
+
+  useEffect(() => {
+    const updateMousePosition = (e: MouseEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+    };
+
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, [cursorX, cursorY]);
+
+  // Custom hook to manage cursor visibility
+  useEffect(() => {
+    const handleCursorEnter = () => setIsVisible(true);
+    const handleCursorLeave = () => setIsVisible(false);
+
+    // Listen to custom events
+    window.addEventListener("cursor-enter", handleCursorEnter);
+    window.addEventListener("cursor-leave", handleCursorLeave);
+
+    return () => {
+      window.removeEventListener("cursor-enter", handleCursorEnter);
+      window.removeEventListener("cursor-leave", handleCursorLeave);
+    };
+  }, []);
+
+  // Click effect management
+  useEffect(() => {
+    const handleMouseDown = () => {
+      setIsClicked(true);
+    };
+
+    const handleMouseUp = () => {
+      setIsClicked(false);
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 pointer-events-none z-[9999]"
+      style={{
+        x: cursorX,
+        y: cursorY,
+      }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale: isVisible ? 1 : 0,
+        opacity: isVisible ? 1 : 0,
+      }}
+      transition={{
+        type: "spring",
+        damping: 20,
+        stiffness: 300,
+        mass: 0.8,
+      }}
+    >
+      <motion.div
+        className="relative -translate-x-1/2 -translate-y-1/2"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{
+          scale: isVisible ? 1 : 0,
+          rotate: isVisible ? 0 : -180,
+        }}
+        transition={{
+          type: "spring",
+          damping: 20,
+          stiffness: 300,
+          mass: 0.8,
+        }}
+      >
+        {/* Main cursor circle */}
+        <motion.div
+          className="w-40 h-40 rounded-full border-2 border-white/5 flex items-center justify-center shadow-2xl relative overflow-hidden"
+          whileHover={{ scale: 1.1 }}
+          animate={{
+            scale: isClicked ? 0.8 : 1,
+            rotate: isClicked ? 15 : 0,
+          }}
+          transition={{
+            type: "spring",
+            damping: 10,
+            stiffness: 600,
+            mass: 0.3,
+          }}
+        >
+          {/* Background glow effect */}
+          <motion.div
+            className="absolute inset-0 backdrop-blur-xl rounded-full"
+            animate={{
+              scale: isVisible ? [1, 1.05, 1] : 1,
+              opacity: isClicked ? 0.8 : 1,
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          <motion.div className="relative z-10 text-center">
+            <motion.span
+              className="text-white text-2xl font-cabinet-grotesk block leading-tight font-bold"
+              initial={{ opacity: 0, scale: 0.8, y: 5 }}
+              animate={{
+                opacity: isVisible ? 1 : 0,
+                scale: isVisible ? 1 : 0.8,
+                y: isVisible ? 0 : 5,
+              }}
+              transition={{ delay: 0.1, duration: 0.4 }}
+            >
+              View
+            </motion.span>
+            <motion.span
+              className="text-white text-2xl font-cabinet-grotesk block leading-tight font-bold"
+              initial={{ opacity: 0, scale: 0.8, y: -5 }}
+              animate={{
+                opacity: isVisible ? 1 : 0,
+                scale: isVisible ? 1 : 0.8,
+                y: isVisible ? 0 : -5,
+              }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+            >
+              Project
+            </motion.span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 const projects = [
   {
@@ -76,35 +224,38 @@ export default function DesignExplorations() {
   });
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full container mx-auto"
-      id="explorations"
-    >
-      <motion.h1
-        className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-0 py-20"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      >
-        Design Explorations
-      </motion.h1>
-
+    <>
+      <CustomCursor />
       <div
-        className="relative w-full"
-        style={{ height: `${projects.length * 100}vh` }}
+        ref={containerRef}
+        className="relative w-full container mx-auto"
+        id="explorations"
       >
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            project={project}
-            index={index}
-            total={projects.length}
-            scrollProgress={scrollYProgress}
-          />
-        ))}
+        <motion.h1
+          className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-0 py-20"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Design Explorations
+        </motion.h1>
+
+        <div
+          className="relative w-full"
+          style={{ height: `${projects.length * 100}vh` }}
+        >
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={index}
+              project={project}
+              index={index}
+              total={projects.length}
+              scrollProgress={scrollYProgress}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -132,14 +283,26 @@ function ProjectCard({
     [100, 0] // Each card moves from below to exact position
   );
 
+  // Cursor event handlers
+  const handleMouseEnter = () => {
+    document.body.style.cursor = "none";
+    window.dispatchEvent(new CustomEvent("cursor-enter"));
+  };
+
+  const handleMouseLeave = () => {
+    document.body.style.cursor = "auto";
+    window.dispatchEvent(new CustomEvent("cursor-leave"));
+  };
+
   return (
     <motion.div
       style={{
         y,
         backgroundColor: project.bg,
-        // zIndex: index + 20, // Much higher z-index to stack above title
       }}
-      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden "
+      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden cursor-none"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="p-6 md:p-8 h-full flex flex-col">
         {/* Header */}
@@ -158,20 +321,19 @@ function ProjectCard({
 
         {/* Image Container */}
         <motion.div
-          className="relative overflow-hidden mt-6 md:mt-8 rounded-xl flex-1"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden mt-6 md:mt-8 rounded-xl flex-1 group"
+          whileHover={{ scale: 1.01 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
-            className="absolute inset-0 bg-black/30 z-10"
-            whileHover={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            className="absolute inset-0 bg-black/20 z-10 group-hover:bg-black/10"
+            transition={{ duration: 0.4 }}
           />
 
           <motion.div
             className="h-full w-full"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
               width={1200}
@@ -183,25 +345,41 @@ function ProjectCard({
             />
           </motion.div>
 
-          {/* Hover Overlay */}
+          {/* Enhanced Hover Overlay */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-20 flex items-end p-6 opacity-0"
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-20 flex items-end p-6 opacity-0 group-hover:opacity-100"
+            transition={{ duration: 0.4 }}
           >
             <motion.div
-              initial={{ y: 20, opacity: 0 }}
+              initial={{ y: 30, opacity: 0 }}
               whileHover={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
+              transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
               className="text-white"
             >
-              <p className="text-sm font-cabinet-grotesk opacity-80 mb-2">
+              <motion.p
+                className="text-sm font-cabinet-grotesk opacity-80 mb-2"
+                initial={{ x: -20, opacity: 0 }}
+                whileHover={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
                 Project Details
-              </p>
-              <h3 className="text-xl font-medium">{project.description}</h3>
-              <p className="text-sm opacity-70 mt-1">
+              </motion.p>
+              <motion.h3
+                className="text-xl font-medium"
+                initial={{ x: -20, opacity: 0 }}
+                whileHover={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.25, duration: 0.3 }}
+              >
+                {project.description}
+              </motion.h3>
+              <motion.p
+                className="text-sm opacity-70 mt-1"
+                initial={{ x: -20, opacity: 0 }}
+                whileHover={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+              >
                 {project.category} • {project.year}
-              </p>
+              </motion.p>
             </motion.div>
           </motion.div>
         </motion.div>
