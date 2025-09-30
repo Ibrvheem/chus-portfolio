@@ -76,7 +76,11 @@ export default function DesignExplorations() {
   });
 
   return (
-    <div ref={containerRef} className="relative w-full" id="explorations">
+    <div
+      ref={containerRef}
+      className="relative w-full container mx-auto"
+      id="explorations"
+    >
       <motion.h1
         className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-0 py-20"
         initial={{ opacity: 0, y: 50 }}

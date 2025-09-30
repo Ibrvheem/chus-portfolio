@@ -12,7 +12,7 @@ import Footer from "@/components/ui/footer";
 export default function Home() {
   return (
     <div className="font-sans   gap-16  bg-[#0C121B]">
-      <div className="container  mx-auto text-white text-center space-y-8">
+      <div className="  mx-auto text-white text-center space-y-8">
         <div className="w-full flex items-center justify-center z-10 relative">
           <div>
             <Navbar />

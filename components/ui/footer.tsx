@@ -87,7 +87,7 @@ const liquidFillVariants = {
 
 export default function Footer() {
   return (
-    <div className="min-h-[40vh] flex justify-around flex-col">
+    <div className="min-h-[40vh] flex justify-around flex-col container mx-auto">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-7xl text-center text-white">
           Let&apos;s Connect
