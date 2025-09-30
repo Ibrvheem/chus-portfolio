@@ -92,22 +92,34 @@ export function PicturesMarquee() {
     <div className="relative flex h-[70vh] w-full flex-row items-center justify-center overflow-hidden gap-4 ">
       {/* First Marquee */}
       <Marquee pauseOnHover vertical className="[--duration:25s]">
-        {firstRow.map((picture) => (
-          <PictureCard key={picture.id} src={picture.src} alt={picture.alt} />
+        {Array.from({ length: 6 }, (_, i) => (
+          <PictureCard
+            key={i + 7}
+            src={`/assets/side-quests/${i + 7}.jpg`}
+            alt={`Side quest ${i + 7}`}
+          />
         ))}
       </Marquee>
 
       {/* Second Marquee (Reverse) */}
       <Marquee reverse pauseOnHover vertical className="[--duration:20s]">
-        {secondRow.map((picture) => (
-          <PictureCard key={picture.id} src={picture.src} alt={picture.alt} />
+        {Array.from({ length: 6 }, (_, i) => (
+          <PictureCard
+            key={i + 1}
+            src={`/assets/side-quests/${i + 1}.jpg`}
+            alt={`Side quest ${i + 1}`}
+          />
         ))}
       </Marquee>
 
       {/* Third Marquee */}
       <Marquee pauseOnHover vertical className="[--duration:30s]">
-        {thirdRow.map((picture) => (
-          <PictureCard key={picture.id} src={picture.src} alt={picture.alt} />
+        {Array.from({ length: 6 }, (_, i) => (
+          <PictureCard
+            key={i + 13}
+            src={`/assets/side-quests/${i + 13}.jpg`}
+            alt={`Side quest ${i + 13}`}
+          />
         ))}
       </Marquee>
 

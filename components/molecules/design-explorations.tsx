@@ -105,17 +105,28 @@ function CustomCursor({ color }: { color?: string }) {
             mass: 0.3,
           }}
         >
-          {/* Background glow effect */}
+          {/* Animated backdrop blur effect */}
           <motion.div
-            className="absolute inset-0 backdrop-blur-xl rounded-full"
+            className="absolute inset-0 rounded-full"
+            initial={{
+              backdropFilter: "blur(0px)",
+              backgroundColor: "rgba(0, 0, 0, 0)",
+            }}
             animate={{
+              backdropFilter: isVisible ? "blur(20px)" : "blur(0px)",
+              backgroundColor: isVisible
+                ? "rgba(0, 0, 0, 0.2)"
+                : "rgba(0, 0, 0, 0)",
               scale: isVisible ? [1, 1.05, 1] : 1,
-              opacity: isClicked ? 0.8 : 1,
             }}
             transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
+              backdropFilter: { duration: 0.6, ease: "easeOut" },
+              backgroundColor: { duration: 0.6, ease: "easeOut" },
+              scale: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
             }}
           />
 
