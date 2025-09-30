@@ -13,9 +13,24 @@ import {
 import { ArrowUp } from "lucide-react";
 
 const socialIcons = [
-  { icon: FaLinkedinIn, href: "#", label: "LinkedIn", color: "#0077B5" },
-  { icon: FaInstagram, href: "#", label: "Instagram", color: "#E4405F" },
-  { icon: FaXTwitter, href: "#", label: "Twitter", color: "#1DA1F2" },
+  {
+    icon: FaLinkedinIn,
+    href: "https://ng.linkedin.com/in/amina-mustapha-139151218",
+    label: "LinkedIn",
+    color: "#0077B5",
+  },
+  {
+    icon: FaInstagram,
+    href: "https://www.instagram.com/amiinarabiu/",
+    label: "Instagram",
+    color: "#E4405F",
+  },
+  {
+    icon: FaXTwitter,
+    href: "https://x.com/amiinarabiu",
+    label: "Twitter",
+    color: "#1DA1F2",
+  },
   { icon: FaBehance, href: "#", label: "Behance", color: "#1769FF" },
   { icon: FaMedium, href: "#", label: "Medium", color: "#00AB6C" },
 ];
