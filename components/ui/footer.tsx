@@ -31,8 +31,18 @@ const socialIcons = [
     label: "Twitter",
     color: "#1DA1F2",
   },
-  { icon: FaBehance, href: "#", label: "Behance", color: "#1769FF" },
-  { icon: FaMedium, href: "#", label: "Medium", color: "#00AB6C" },
+  {
+    icon: FaBehance,
+    href: "https://www.behance.net/aminamustapha1",
+    label: "Behance",
+    color: "#1769FF",
+  },
+  {
+    icon: FaMedium,
+    href: "https://medium.com/@aminarabiu",
+    label: "Medium",
+    color: "#00AB6C",
+  },
 ];
 
 const containerVariants = {
@@ -115,7 +125,7 @@ export default function Footer() {
           <CTAs />
         </div>
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center md:flex-row flex-col">
         <div className="flex text-left gap-20">
           <div className="space-y-2">
             <p className="text-base text-white/60">CONTACT</p>

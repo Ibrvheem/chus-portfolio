@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 
 // Custom Cursor Component
-function CustomCursor({ color }: { color?: string }) {
+function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -229,6 +229,7 @@ const projects = [
 
 export default function DesignExplorations() {
   const containerRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -247,6 +248,13 @@ export default function DesignExplorations() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            opacity: useTransform(
+              scrollYProgress,
+              [0, 0.01, 0.02, 0.2],
+              [1, 0.2, 0, 0]
+            ),
+          }}
         >
           Design Explorations
         </motion.h1>
@@ -311,7 +319,7 @@ function ProjectCard({
         y,
         backgroundColor: project.bg,
       }}
-      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden cursor-none"
+      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden cursor-none z-10"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
