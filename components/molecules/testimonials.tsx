@@ -7,7 +7,7 @@ export default function Testimonials() {
   ));
 
   return (
-    <div className="min-h-screen mx-auto space-y-16 " id="testimonials">
+    <div className="md:min-h-screen mx-auto md:space-y-16 " id="testimonials">
       <div className="space-y-4">
         <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
           What It&lsquo;s Like to Work With Me?

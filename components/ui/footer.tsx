@@ -125,8 +125,8 @@ export default function Footer() {
           <CTAs />
         </div>
       </div>
-      <div className="flex justify-between items-center md:flex-row flex-col">
-        <div className="flex text-left gap-20">
+      <div className="flex justify-between md:items-center md:flex-row flex-col md:px-0 p-8">
+        <div className="flex md:flex-row flex-col text-left md:gap-20 ">
           <div className="space-y-2">
             <p className="text-base text-white/60">CONTACT</p>
             <p className="text-lg">+234 810 059 3631</p>
@@ -136,9 +136,9 @@ export default function Footer() {
             <p className="text-lg">amiinarabiu20@gmail.com</p>
           </div>
         </div>
-        <div>
+        <div className="flex items-center justify-between mt-4 md:hidden">
           <motion.div
-            className="socials flex gap-6 text-4xl text-white"
+            className="socials flex md:gap-6 gap-2 text-4xl text-white md:mt-0 "
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -177,10 +177,15 @@ export default function Footer() {
               );
             })}
           </motion.div>
+          <a href="#">
+            <div className="bg-white text-primary w-fit p-3 rounded-full ml-auto ">
+              <ArrowUp />
+            </div>
+          </a>
         </div>
       </div>
       <a href="#">
-        <div className="bg-white text-primary w-fit p-3 rounded-full ml-auto animate-bounce">
+        <div className="bg-white text-primary w-fit p-3 rounded-full ml-auto animate-bounce md:block hidden">
           <ArrowUp />
         </div>
       </a>

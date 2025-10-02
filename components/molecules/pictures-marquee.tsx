@@ -89,7 +89,7 @@ const PictureCard = ({ src, alt }: { src: string; alt: string }) => {
 
 export function PicturesMarquee() {
   return (
-    <div className="relative flex h-[70vh] w-full flex-row items-center justify-center overflow-hidden gap-4 ">
+    <div className="relative h-[70vh] w-full flex-row items-center justify-center overflow-hidden gap-4 md:flex hidden md:px-0">
       {/* First Marquee */}
       <Marquee pauseOnHover vertical className="[--duration:25s]">
         {Array.from({ length: 6 }, (_, i) => (

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { DirectionAwareHover } from "../ui/direction-aware-hover";
 import { LinkPreview } from "../ui/link-preview";
@@ -37,7 +38,7 @@ const projects = [
 
 export default function MyWork() {
   return (
-    <div className="container mx-auto space-y-16 min-h-screen mb-96">
+    <div className="container mx-auto space-y-16 min-h-screen mb-96 md:px-0 px-4">
       <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
         My Work
       </h1>
@@ -45,8 +46,10 @@ export default function MyWork() {
         {projects.map((project, idx) => (
           <div
             key={idx}
-            style={{ width: project.width }}
-            className="flex-grow relative overflow-visible"
+            style={{
+              width: window.innerWidth >= 1024 ? project.width : "100%",
+            }}
+            className="flex-grow relative overflow-visible lg:w-auto w-full"
           >
             <DirectionAwareHoverCard
               imageUrl={project.imageUrl}
@@ -72,7 +75,7 @@ function DirectionAwareHoverCard({
   return (
     <DirectionAwareHover
       imageUrl={imageUrl}
-      imageClassName="!h-[60vh] object-center"
+      imageClassName="!h-[40vh] md:!h-[60vh] object-center"
       className="!w-full !h-fit relative "
       childrenClassName="max-w-full overflow-visible backdrop-blur p-4 border border-white/15 rounded-xl flex flex-row justify-between items-center"
     >
