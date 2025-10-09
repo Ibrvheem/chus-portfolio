@@ -19,10 +19,8 @@ function CustomCursor() {
       cursorY.set(e.clientY);
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("mousemove", updateMousePosition);
-      return () => window.removeEventListener("mousemove", updateMousePosition);
-    }
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
   }, [cursorX, cursorY]);
 
   // Custom hook to manage cursor visibility
@@ -31,15 +29,13 @@ function CustomCursor() {
     const handleCursorLeave = () => setIsVisible(false);
 
     // Listen to custom events
-    if (typeof window !== "undefined") {
-      window.addEventListener("cursor-enter", handleCursorEnter);
-      window.addEventListener("cursor-leave", handleCursorLeave);
+    window.addEventListener("cursor-enter", handleCursorEnter);
+    window.addEventListener("cursor-leave", handleCursorLeave);
 
-      return () => {
-        window.removeEventListener("cursor-enter", handleCursorEnter);
-        window.removeEventListener("cursor-leave", handleCursorLeave);
-      };
-    }
+    return () => {
+      window.removeEventListener("cursor-enter", handleCursorEnter);
+      window.removeEventListener("cursor-leave", handleCursorLeave);
+    };
   }, []);
 
   // Click effect management
@@ -52,15 +48,13 @@ function CustomCursor() {
       setIsClicked(false);
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("mousedown", handleMouseDown);
-      window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
 
-      return () => {
-        window.removeEventListener("mousedown", handleMouseDown);
-        window.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
   }, []);
 
   return (
@@ -265,7 +259,10 @@ export default function DesignExplorations() {
           Design Explorations
         </motion.h1>
 
-        <div className="relative w-full md:h-[700vh] h-auto">
+        <div
+          className="relative w-full"
+          style={{ height: `${projects.length * 100}vh` }}
+        >
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
@@ -294,59 +291,35 @@ function ProjectCard({
   total,
   scrollProgress,
 }: ProjectCardProps) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth < 768);
-      }
-    };
-
-    checkMobile();
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", checkMobile);
-      return () => window.removeEventListener("resize", checkMobile);
-    }
-  }, []);
-
   // Calculate scroll triggers for each card
   const cardStart = index / total;
   const cardEnd = (index + 1) / total;
 
-  // Y position - cards slide up and snap into place (only on desktop)
+  // Y position - cards slide up and snap into place
   const y = useTransform(
     scrollProgress,
     [cardStart, cardEnd],
-    isMobile ? [0, 0] : [100, 0] // No transform on mobile, normal transform on desktop
+    [100, 0] // Each card moves from below to exact position
   );
 
   // Cursor event handlers
   const handleMouseEnter = () => {
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "none";
-    }
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("cursor-enter"));
-    }
+    document.body.style.cursor = "none";
+    window.dispatchEvent(new CustomEvent("cursor-enter"));
   };
 
   const handleMouseLeave = () => {
-    if (typeof document !== "undefined") {
-      document.body.style.cursor = "auto";
-    }
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("cursor-leave"));
-    }
+    document.body.style.cursor = "auto";
+    window.dispatchEvent(new CustomEvent("cursor-leave"));
   };
 
   return (
     <motion.div
       style={{
-        y: isMobile ? 0 : y,
+        y,
         backgroundColor: project.bg,
       }}
-      className="md:sticky relative top-0 md:top-24 w-full h-[70vh] md:h-[80vh] rounded-2xl overflow-hidden cursor-none z-10 mb-6 md:mb-0"
+      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden cursor-none z-10"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
