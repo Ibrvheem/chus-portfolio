@@ -39,7 +39,7 @@ const projects = [
 export default function MyWork() {
   return (
     <div className="container mx-auto space-y-16 min-h-screen mb-96 md:px-0 px-4">
-      <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
+      <h1 className="font-gasoek-one text-6xl sm:text-8xl text-center text-white">
         My Work
       </h1>
       <div className="flex  flex-wrap gap-8 ">

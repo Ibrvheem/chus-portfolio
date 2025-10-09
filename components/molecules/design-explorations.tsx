@@ -244,7 +244,7 @@ export default function DesignExplorations() {
         id="explorations"
       >
         <motion.h1
-          className="font-gasoek-one text-4xl sm:text-8xl text-center text-white sticky top-20 z-0 md:py-20"
+          className="font-gasoek-one text-5xl sm:text-8xl text-center text-white sticky top-20 z-0 md:py-20"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
