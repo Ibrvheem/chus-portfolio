@@ -46,10 +46,10 @@ export default function MyWork() {
         {projects.map((project, idx) => (
           <div
             key={idx}
-            style={{
-              width: window.innerWidth >= 1024 ? project.width : "100%",
-            }}
             className="flex-grow relative overflow-visible lg:w-auto w-full"
+            style={{
+              width: project.width,
+            }}
           >
             <DirectionAwareHoverCard
               imageUrl={project.imageUrl}

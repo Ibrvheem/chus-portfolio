@@ -3,8 +3,8 @@ import { PicturesMarquee } from "./pictures-marquee";
 
 export default function SideQuest() {
   return (
-    <div className="grid md:grid-cols-2 min-h-screen items-center container mx-auto md:px-0 px-8">
-      <div className="space-y-4">
+    <div className="grid md:grid-cols-2 min-h-screen items-center container mx-auto md:px-0 ">
+      <div className="space-y-4 px-8">
         <h1 className="font-gasoek-one text-5xl sm:text-7xl text-center md:text-left text-white ">
           Side Quests
         </h1>

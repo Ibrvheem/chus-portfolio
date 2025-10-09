@@ -69,8 +69,8 @@ const DummyContent = ({
 
 const data = [
   {
-    category: "UI/UX Designer & Product Strategist",
-    title: "Abdulalim",
+    category: "Co-Founder & CTO Schoola",
+    title: "Abdulalim Ladan",
     src: `https://image.mux.com/Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs/thumbnail.png`,
     content: (
       <DummyContent
@@ -81,8 +81,8 @@ const data = [
     ),
   },
   {
-    category: "Senior Product Manager",
-    title: "Mackenzie",
+    category: "Lead Venture Analyst Amiron Ventures",
+    title: "Mackenzie Kyryluk",
     src: `https://image.mux.com/01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo/thumbnail.png`,
     content: (
       <DummyContent
@@ -93,8 +93,8 @@ const data = [
     ),
   },
   {
-    category: "Creative Director",
-    title: "Kleis",
+    category: "Manager of Operations and MVP Development Amiron Ventures r",
+    title: "Mat Kleisinger",
     src: `https://image.mux.com/xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI/thumbnail.png`,
     content: (
       <DummyContent
@@ -105,8 +105,8 @@ const data = [
     ),
   },
   {
-    category: "Tech Startup Founder",
-    title: "Bash",
+    category: "Lead Product Designer/ Manager Amiron Ventures",
+    title: "Bashir Mustapha",
     src: `https://image.mux.com/ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY/thumbnail.png`,
     content: (
       <DummyContent

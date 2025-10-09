@@ -46,13 +46,17 @@ export function DraggableCardDemo({
   // Check if mobile on mount and window resize
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth < 768);
+      }
     };
 
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
+    }
   }, []);
 
   // Auto-advance carousel every 4 seconds on mobile

@@ -19,8 +19,10 @@ function CustomCursor() {
       cursorY.set(e.clientY);
     };
 
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
+    if (typeof window !== "undefined") {
+      window.addEventListener("mousemove", updateMousePosition);
+      return () => window.removeEventListener("mousemove", updateMousePosition);
+    }
   }, [cursorX, cursorY]);
 
   // Custom hook to manage cursor visibility
@@ -29,13 +31,15 @@ function CustomCursor() {
     const handleCursorLeave = () => setIsVisible(false);
 
     // Listen to custom events
-    window.addEventListener("cursor-enter", handleCursorEnter);
-    window.addEventListener("cursor-leave", handleCursorLeave);
+    if (typeof window !== "undefined") {
+      window.addEventListener("cursor-enter", handleCursorEnter);
+      window.addEventListener("cursor-leave", handleCursorLeave);
 
-    return () => {
-      window.removeEventListener("cursor-enter", handleCursorEnter);
-      window.removeEventListener("cursor-leave", handleCursorLeave);
-    };
+      return () => {
+        window.removeEventListener("cursor-enter", handleCursorEnter);
+        window.removeEventListener("cursor-leave", handleCursorLeave);
+      };
+    }
   }, []);
 
   // Click effect management
@@ -48,13 +52,15 @@ function CustomCursor() {
       setIsClicked(false);
     };
 
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    if (typeof window !== "undefined") {
+      window.addEventListener("mousedown", handleMouseDown);
+      window.addEventListener("mouseup", handleMouseUp);
 
-    return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
+      return () => {
+        window.removeEventListener("mousedown", handleMouseDown);
+        window.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
   }, []);
 
   return (
@@ -304,13 +310,21 @@ function ProjectCard({
 
   // Cursor event handlers
   const handleMouseEnter = () => {
-    document.body.style.cursor = "none";
-    window.dispatchEvent(new CustomEvent("cursor-enter"));
+    if (typeof document !== "undefined") {
+      document.body.style.cursor = "none";
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("cursor-enter"));
+    }
   };
 
   const handleMouseLeave = () => {
-    document.body.style.cursor = "auto";
-    window.dispatchEvent(new CustomEvent("cursor-leave"));
+    if (typeof document !== "undefined") {
+      document.body.style.cursor = "auto";
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("cursor-leave"));
+    }
   };
 
   return (

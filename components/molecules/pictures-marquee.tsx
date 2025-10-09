@@ -89,43 +89,64 @@ const PictureCard = ({ src, alt }: { src: string; alt: string }) => {
 
 export function PicturesMarquee() {
   return (
-    <div className="relative h-[70vh] w-full flex-row items-center justify-center overflow-hidden gap-4 md:flex hidden md:px-0">
-      {/* First Marquee */}
-      <Marquee pauseOnHover vertical className="[--duration:25s]">
-        {Array.from({ length: 6 }, (_, i) => (
-          <PictureCard
-            key={i + 7}
-            src={`/assets/side-quests/${i + 7}.jpg`}
-            alt={`Side quest ${i + 7}`}
-          />
-        ))}
-      </Marquee>
+    <>
+      {/* Desktop View - Vertical Marquees */}
+      <div className="relative h-[70vh] w-full flex-row items-center justify-center overflow-hidden gap-4 md:flex hidden md:px-0">
+        {/* First Marquee */}
+        <Marquee pauseOnHover vertical className="[--duration:25s]">
+          {Array.from({ length: 6 }, (_, i) => (
+            <PictureCard
+              key={i + 7}
+              src={`/assets/side-quests/${i + 7}.jpg`}
+              alt={`Side quest ${i + 7}`}
+            />
+          ))}
+        </Marquee>
 
-      {/* Second Marquee (Reverse) */}
-      <Marquee reverse pauseOnHover vertical className="[--duration:20s]">
-        {Array.from({ length: 6 }, (_, i) => (
-          <PictureCard
-            key={i + 1}
-            src={`/assets/side-quests/${i + 1}.jpg`}
-            alt={`Side quest ${i + 1}`}
-          />
-        ))}
-      </Marquee>
+        {/* Second Marquee (Reverse) */}
+        <Marquee reverse pauseOnHover vertical className="[--duration:20s]">
+          {Array.from({ length: 6 }, (_, i) => (
+            <PictureCard
+              key={i + 1}
+              src={`/assets/side-quests/${i + 1}.jpg`}
+              alt={`Side quest ${i + 1}`}
+            />
+          ))}
+        </Marquee>
 
-      {/* Third Marquee */}
-      <Marquee pauseOnHover vertical className="[--duration:30s]">
-        {Array.from({ length: 6 }, (_, i) => (
-          <PictureCard
-            key={i + 13}
-            src={`/assets/side-quests/${i + 13}.jpg`}
-            alt={`Side quest ${i + 13}`}
-          />
-        ))}
-      </Marquee>
+        {/* Third Marquee */}
+        <Marquee pauseOnHover vertical className="[--duration:30s]">
+          {Array.from({ length: 6 }, (_, i) => (
+            <PictureCard
+              key={i + 13}
+              src={`/assets/side-quests/${i + 13}.jpg`}
+              alt={`Side quest ${i + 13}`}
+            />
+          ))}
+        </Marquee>
 
-      {/* Gradient overlays */}
-      <div className="pointer-events-none absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-[#0C121B] to-black/0  z-10" />
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0C121B] to-black/0  z-10" />
-    </div>
+        {/* Gradient overlays for desktop */}
+        <div className="pointer-events-none absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-[#0C121B] to-black/0 z-10" />
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#0C121B] to-black/0 z-10" />
+      </div>
+
+      {/* Mobile View - Horizontal Marquee */}
+      <div className="relative h-80 w-full flex md:hidden overflow-hidden px-0">
+        <Marquee pauseOnHover className="[--duration:20s]">
+          {Array.from({ length: 12 }, (_, i) => (
+            <div key={i + 1} className="mx-2">
+              <PictureCard
+                src={`/assets/side-quests/${i + 1}.jpg`}
+                alt={`Side quest ${i + 1}`}
+              />
+            </div>
+          ))}
+        </Marquee>
+
+        {/* Gradient overlays for mobile */}
+        <div className="pointer-events-none absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-[#0C121B] to-black/0 z-10" />
+        <div className="pointer-events-none absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-[#0C121B] to-black/0 z-10" />
+      </div>
+    </>
   );
 }
