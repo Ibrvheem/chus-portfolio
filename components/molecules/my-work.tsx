@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DirectionAwareHover } from "../ui/direction-aware-hover";
 import { LinkPreview } from "../ui/link-preview";
 
@@ -37,26 +37,39 @@ const projects = [
 ];
 
 export default function MyWork() {
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    handleResize(); // set initial value
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="container mx-auto space-y-16 min-h-screen mb-96 md:px-0 px-4">
       <h1 className="font-gasoek-one text-6xl sm:text-8xl text-center text-white">
         My Work
       </h1>
-      <div className="flex  flex-wrap gap-8 ">
+      <div className="flex flex-wrap gap-8">
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="flex-grow relative overflow-visible lg:w-auto w-full"
             style={{
-              width: project.width,
+              width: isLargeScreen ? project.width : "100%",
             }}
+            className="flex-grow relative overflow-visible lg:w-auto w-full"
           >
             <DirectionAwareHoverCard
               imageUrl={project.imageUrl}
               description={project.description}
               website={project.website}
             />
-            <div className="md:hidden flex justify-between items-center mt-4 ">
+            <div className="md:hidden flex justify-between items-center mt-4">
               <h4 className="font-cabinet-grotesk text-2xl">
                 {project.description}
               </h4>
@@ -84,14 +97,14 @@ function DirectionAwareHoverCard({
     <DirectionAwareHover
       imageUrl={imageUrl}
       imageClassName="!h-[40vh] md:!h-[60vh] object-center"
-      className="!w-full !h-fit relative "
+      className="!w-full !h-fit relative"
       childrenClassName="max-w-full overflow-visible backdrop-blur p-4 border border-white/15 rounded-xl flex flex-row justify-between items-center"
     >
       <>
         <p className="font-bold">{description}</p>
         <div className="font-normal text-sm relative">
           {website ? (
-            <LinkPreview url={website} className="text-white relative z-200 ">
+            <LinkPreview url={website} className="text-white relative z-200">
               <a
                 href={website}
                 target="_blank"
