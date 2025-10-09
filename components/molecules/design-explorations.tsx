@@ -265,10 +265,7 @@ export default function DesignExplorations() {
           Design Explorations
         </motion.h1>
 
-        <div
-          className="relative w-full"
-          style={{ height: `${projects.length * 100}vh` }}
-        >
+        <div className="relative w-full md:h-[700vh] h-auto">
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
@@ -297,15 +294,31 @@ function ProjectCard({
   total,
   scrollProgress,
 }: ProjectCardProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth < 768);
+      }
+    };
+
+    checkMobile();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
+    }
+  }, []);
+
   // Calculate scroll triggers for each card
   const cardStart = index / total;
   const cardEnd = (index + 1) / total;
 
-  // Y position - cards slide up and snap into place
+  // Y position - cards slide up and snap into place (only on desktop)
   const y = useTransform(
     scrollProgress,
     [cardStart, cardEnd],
-    [100, 0] // Each card moves from below to exact position
+    isMobile ? [0, 0] : [100, 0] // No transform on mobile, normal transform on desktop
   );
 
   // Cursor event handlers
@@ -330,10 +343,10 @@ function ProjectCard({
   return (
     <motion.div
       style={{
-        y,
+        y: isMobile ? 0 : y,
         backgroundColor: project.bg,
       }}
-      className="sticky top-24 w-full h-[80vh] rounded-2xl overflow-hidden cursor-none z-10"
+      className="md:sticky relative top-0 md:top-24 w-full h-[70vh] md:h-[80vh] rounded-2xl overflow-hidden cursor-none z-10 mb-6 md:mb-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
