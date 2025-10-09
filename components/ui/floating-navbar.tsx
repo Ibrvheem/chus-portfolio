@@ -55,7 +55,7 @@ export const FloatingNav = ({
             duration: 0.2,
           }}
           className={cn(
-            " font-satoshi flex w-[90%] md:max-w-fit fixed top-10 inset-x-0  mx-auto border-[2px] border-white/15 dark:border-white/[0.2] rounded-full bg-white/15 backdrop-blur-md shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-3 py-3 items-center justify-between md:justify-center space-x-8 uppercase",
+            " font-satoshi flex w-[90%] md:max-w-fit fixed top-10 inset-x-0  mx-auto border-[2px] border-white/15 dark:border-white/[0.2] rounded-full bg-white/15 backdrop-blur-md shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[9998] px-3 py-3 items-center justify-between md:justify-center space-x-8 uppercase",
             className
           )}
         >
@@ -136,7 +136,7 @@ export const FloatingNav = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[4999] bg-black/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-[9997] bg-black/95 backdrop-blur-xl md:hidden"
           >
             <motion.div
               initial={{ y: "100%" }}
