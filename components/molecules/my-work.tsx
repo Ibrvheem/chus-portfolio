@@ -42,7 +42,7 @@ export default function MyWork() {
       <h1 className="font-gasoek-one text-4xl sm:text-8xl text-center text-white">
         My Work
       </h1>
-      <div className="flex flex-wrap gap-8">
+      <div className="flex  flex-wrap gap-8 ">
         {projects.map((project, idx) => (
           <div
             key={idx}
@@ -56,6 +56,14 @@ export default function MyWork() {
               description={project.description}
               website={project.website}
             />
+            <div className="md:hidden flex justify-between items-center mt-4 ">
+              <h4 className="font-cabinet-grotesk text-2xl">
+                {project.description}
+              </h4>
+              <a href={project.website} className="text-white/50">
+                {project.website ? "LIVE" : "NDA"}
+              </a>
+            </div>
           </div>
         ))}
       </div>

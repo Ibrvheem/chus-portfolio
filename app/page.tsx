@@ -17,10 +17,10 @@ export default function Home() {
           <div>
             <Navbar />
           </div>
-          <div className="max-w-3xl mx-auto space-y-8 mb-16">
+          <div className="max-w-3xl mx-auto space-y-8 mb-16 md:px-0 px-4">
             {" "}
             <div className="h-40" />
-            <h1 className="font-gasoek-one text-4xl sm:text-8xl">
+            <h1 className="font-gasoek-one text-7xl sm:text-8xl">
               Hi, it&#39;s amina!
             </h1>
             <p className="font-cabinet-grotesk text-lg sm:text-xl leading-8 text-white/80">
