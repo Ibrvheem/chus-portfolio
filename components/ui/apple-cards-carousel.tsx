@@ -167,11 +167,13 @@ export const Card = ({
     useContext(CarouselContext);
   const isPlaying = playingVideoIndex === index;
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
   // Reset video loaded state when playback stops
   React.useEffect(() => {
     if (!isPlaying) {
       setIsVideoLoaded(false);
+      setIsVideoLoading(false);
     }
   }, [isPlaying]);
 
@@ -183,6 +185,7 @@ export const Card = ({
 
   // Handler for direct video playback on the card
   const handleVideoPlay = () => {
+    setIsVideoLoading(true); // Show loader immediately
     setPlayingVideoIndex(index); // Set this card as the playing one
   };
 
@@ -192,6 +195,7 @@ export const Card = ({
 
   const handleVideoLoad = () => {
     setIsVideoLoaded(true);
+    setIsVideoLoading(false); // Hide loader when video is ready
   };
 
   const videoId = getVideoId();
@@ -289,74 +293,128 @@ export const Card = ({
 
         {/* Video Player - shows on top when playing and loaded */}
         {isPlaying && videoId && (
-          <div
-            className={`absolute inset-0 z-30 transition-opacity duration-300 ${
-              isVideoLoaded ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {/* Close button */}
-            <button
-              onClick={handleVideoStop}
-              className="absolute top-4 right-4 z-40 bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div className="absolute inset-0 z-30">
+            {/* Sophisticated Loading Overlay - appears immediately */}
+            {isVideoLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md rounded-3xl"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                <div className="flex flex-col items-center gap-4">
+                  {/* Animated spinner */}
+                  <div className="relative">
+                    {/* Outer rotating ring */}
+                    <motion.div
+                      className="w-16 h-16 rounded-full border-4 border-white/20"
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      style={{
+                        borderTopColor: "white",
+                        borderRightColor: "white",
+                      }}
+                    />
+                    {/* Inner pulsing circle */}
+                    <motion.div
+                      className="absolute inset-2 rounded-full bg-white/10"
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </div>
+                  {/* Loading text with typewriter effect */}
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-white font-medium text-sm"
+                  >
+                    Loading video...
+                  </motion.p>
+                </div>
+              </motion.div>
+            )}
+
+            <div
+              className={`absolute inset-0 transition-opacity duration-300 ${
+                isVideoLoaded ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              {/* Close button */}
+              <button
+                onClick={handleVideoStop}
+                className="absolute top-4 right-4 z-40 bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors"
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              {/* Video iframe */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden">
+                {/* Blurred background layer for horizontal videos */}
+                <iframe
+                  src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1&muted=1`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  title={`${card.title} Background`}
+                  onLoad={handleVideoLoad}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    height: "100%",
+                    filter: "blur(20px) brightness(0.7)",
+                    transform: "scale(1.1)",
+                    zIndex: 1,
+                  }}
                 />
-              </svg>
-            </button>
 
-            {/* Video iframe */}
-            <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden">
-              {/* Blurred background layer for horizontal videos */}
-              <iframe
-                src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1&muted=1`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                title={`${card.title} Background`}
-                onLoad={handleVideoLoad}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  position: "absolute",
-                  top: "0",
-                  left: "0",
-                  width: "100%",
-                  height: "100%",
-                  filter: "blur(20px) brightness(0.7)",
-                  transform: "scale(1.1)",
-                  zIndex: 1,
-                }}
-              />
-
-              {/* Main video layer - cropped to portrait */}
-              <iframe
-                src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title={`${card.title} Testimonial`}
-                style={{
-                  border: "none",
-                  outline: "none",
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: "100%",
-                  height: "177.78%", // Portrait crop (16:9 to 9:16)
-                  transform: "translate(-50%, -50%)",
-                  transformOrigin: "center center",
-                  zIndex: 2,
-                }}
-              />
+                {/* Main video layer - cropped to portrait */}
+                <iframe
+                  src={`https://player.mux.com/${videoId}?primary_color=ffffff&secondary_color=000000&autoplay=1`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title={`${card.title} Testimonial`}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    width: "100%",
+                    height: "177.78%", // Portrait crop (16:9 to 9:16)
+                    transform: "translate(-50%, -50%)",
+                    transformOrigin: "center center",
+                    zIndex: 2,
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}
