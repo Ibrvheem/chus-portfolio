@@ -4,9 +4,9 @@ import { PicturesMarquee } from "./pictures-marquee";
 export default function SideQuest() {
   return (
     <div className="grid md:grid-cols-2 min-h-screen items-center container mx-auto md:px-0 ">
-      <div className="space-y-4 px-8">
-        <h1 className="font-gasoek-one text-5xl sm:text-7xl text-center md:text-left text-white leading-24 pb-6">
-          Side <br /> Quests
+      <div className="space-y-4 px-8 md:my-0 my-16">
+        <h1 className="font-gasoek-one text-5xl sm:text-7xl text-center md:text-left text-white leading-24 md:pb-6">
+          Side <br className="md:block hidden" /> Quests
         </h1>
         <div className="text-xl font-cabinet-grotesk text-center md:text-left space-y-8 text-white/70">
           <p>
