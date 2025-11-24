@@ -155,7 +155,15 @@ function VideoCard({
           loop
           muted={isMuted}
           playsInline
-        />
+          onError={(e) => {
+            console.error(`Error loading video for ${data.name}:`, e);
+          }}
+        >
+          {/* Fallback message if video doesn't load */}
+          <p className="text-white text-center p-4">
+            Video format not supported in your browser
+          </p>
+        </video>
 
         {/* Subtle dark gradient overlay for text visibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
