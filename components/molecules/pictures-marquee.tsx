@@ -97,7 +97,7 @@ export function PicturesMarquee() {
           {Array.from({ length: 6 }, (_, i) => (
             <PictureCard
               key={i + 7}
-              src={`/assets/side-quests/${i + 7}.jpg`}
+              src={`/assets/side-quest/${i + 7}.jpg`}
               alt={`Side quest ${i + 7}`}
             />
           ))}
@@ -108,7 +108,7 @@ export function PicturesMarquee() {
           {Array.from({ length: 6 }, (_, i) => (
             <PictureCard
               key={i + 1}
-              src={`/assets/side-quests/${i + 1}.jpg`}
+              src={`/assets/side-quest/${i + 1}.jpg`}
               alt={`Side quest ${i + 1}`}
             />
           ))}
@@ -119,7 +119,7 @@ export function PicturesMarquee() {
           {Array.from({ length: 6 }, (_, i) => (
             <PictureCard
               key={i + 13}
-              src={`/assets/side-quests/${i + 13}.jpg`}
+              src={`/assets/side-quest/${i + 13}.jpg`}
               alt={`Side quest ${i + 13}`}
             />
           ))}
@@ -136,7 +136,7 @@ export function PicturesMarquee() {
           {Array.from({ length: 12 }, (_, i) => (
             <div key={i + 1} className="mx-2">
               <PictureCard
-                src={`/assets/side-quests/${i + 1}.jpg`}
+                src={`/assets/side-quest/${i + 1}.jpg`}
                 alt={`Side quest ${i + 1}`}
               />
             </div>
