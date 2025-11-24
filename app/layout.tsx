@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Gasoek_One, Dokdo } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/smooth-scroll";
+import ClientWrapper from "@/components/client-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,8 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${gasoekOne.variable} ${dokdo.variable} antialiased bg-[#0C121B]`}
       >
         <SmoothScrolling />
-
-        {children}
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );
