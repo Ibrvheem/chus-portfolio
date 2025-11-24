@@ -9,6 +9,19 @@ interface LoadingScreenProps {
   onLoadComplete: () => void;
 }
 
+const LOADING_MESSAGES = [
+  "Convincing pixels to behave...",
+  "Bribing the design gods...",
+  "Waking up the testimonials...",
+  "Polishing the portfolio magic ✨",
+  "Teaching videos to load faster...",
+  "Arranging design elements alphabetically... jk",
+  "Making sure everything looks *chef's kiss*",
+  "Calibrating the awesome meter...",
+  "Summoning creative energy...",
+  "Loading brilliance... please hold",
+];
+
 export default function LoadingScreen({
   videoSources,
   imageSources = [],
@@ -16,6 +29,7 @@ export default function LoadingScreen({
 }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
     let loadedCount = 0;
@@ -25,6 +39,11 @@ export default function LoadingScreen({
       onLoadComplete();
       return;
     }
+
+    // Rotate loading messages
+    const messageInterval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 2000);
 
     const checkVideoLoad = (videoSrc: string): Promise<void> => {
       return new Promise((resolve) => {
@@ -93,6 +112,7 @@ export default function LoadingScreen({
     ];
 
     Promise.all(allAssets).then(() => {
+      clearInterval(messageInterval);
       setTimeout(() => {
         setIsComplete(true);
         setTimeout(onLoadComplete, 800);
@@ -145,12 +165,14 @@ export default function LoadingScreen({
 
           {/* Loading Text */}
           <motion.p
+            key={messageIndex}
             className="text-white/40 text-sm mt-8 font-cabinet-grotesk"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.5 }}
           >
-            Loading portfolio...
+            {LOADING_MESSAGES[messageIndex]}
           </motion.p>
         </motion.div>
       )}
