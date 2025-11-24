@@ -4,10 +4,19 @@ import { useState, useEffect } from "react";
 import LoadingScreen from "@/components/ui/loading-screen";
 
 const VIDEO_SOURCES = [
-  "./assets/abdulalim.mov",
-  "./assets/mackenzie.mov",
-  "./assets/mat.mp4",
-  "./assets/bashir.mov",
+  "/assets/alim.mov",
+  "/assets/mackenzie.mov",
+  "/assets/mat.mp4",
+  "/assets/bashir.mov",
+];
+
+const IMAGE_SOURCES = [
+  "/assets/1.jpg", // Navbar profile picture
+  "/assets/2.png", // Hero section images
+  "/assets/3.png",
+  "/assets/4.png",
+  "/assets/5.png",
+  "/assets/6.png",
 ];
 
 export default function ClientWrapper({
@@ -41,6 +50,7 @@ export default function ClientWrapper({
       {isLoading && (
         <LoadingScreen
           videoSources={VIDEO_SOURCES}
+          imageSources={IMAGE_SOURCES}
           onLoadComplete={handleLoadComplete}
         />
       )}

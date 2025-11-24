@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 
 interface LoadingScreenProps {
   videoSources: string[];
+  imageSources?: string[];
   onLoadComplete: () => void;
 }
 
 export default function LoadingScreen({
   videoSources,
+  imageSources = [],
   onLoadComplete,
 }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
@@ -17,9 +19,9 @@ export default function LoadingScreen({
 
   useEffect(() => {
     let loadedCount = 0;
-    const totalVideos = videoSources.length;
+    const totalAssets = videoSources.length + imageSources.length;
 
-    if (totalVideos === 0) {
+    if (totalAssets === 0) {
       onLoadComplete();
       return;
     }
@@ -32,14 +34,14 @@ export default function LoadingScreen({
 
         const onCanPlayThrough = () => {
           loadedCount++;
-          setProgress(Math.round((loadedCount / totalVideos) * 100));
+          setProgress(Math.round((loadedCount / totalAssets) * 100));
           cleanup();
           resolve();
         };
 
         const onError = () => {
           loadedCount++;
-          setProgress(Math.round((loadedCount / totalVideos) * 100));
+          setProgress(Math.round((loadedCount / totalAssets) * 100));
           cleanup();
           resolve();
         };
@@ -56,13 +58,47 @@ export default function LoadingScreen({
       });
     };
 
-    Promise.all(videoSources.map((src) => checkVideoLoad(src))).then(() => {
+    const checkImageLoad = (imageSrc: string): Promise<void> => {
+      return new Promise((resolve) => {
+        const img = new Image();
+
+        const onLoad = () => {
+          loadedCount++;
+          setProgress(Math.round((loadedCount / totalAssets) * 100));
+          cleanup();
+          resolve();
+        };
+
+        const onError = () => {
+          loadedCount++;
+          setProgress(Math.round((loadedCount / totalAssets) * 100));
+          cleanup();
+          resolve();
+        };
+
+        const cleanup = () => {
+          img.removeEventListener("load", onLoad);
+          img.removeEventListener("error", onError);
+        };
+
+        img.addEventListener("load", onLoad);
+        img.addEventListener("error", onError);
+        img.src = imageSrc;
+      });
+    };
+
+    const allAssets = [
+      ...videoSources.map((src) => checkVideoLoad(src)),
+      ...imageSources.map((src) => checkImageLoad(src)),
+    ];
+
+    Promise.all(allAssets).then(() => {
       setTimeout(() => {
         setIsComplete(true);
         setTimeout(onLoadComplete, 800);
       }, 500);
     });
-  }, [videoSources, onLoadComplete]);
+  }, [videoSources, imageSources, onLoadComplete]);
 
   return (
     <AnimatePresence>
@@ -71,7 +107,7 @@ export default function LoadingScreen({
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-[9999] bg-[#0C121B] flex flex-col items-center justify-center"
+          className="fixed inset-0 z-9999 bg-[#0C121B] flex flex-col items-center justify-center"
         >
           {/* Logo or Brand Name */}
           <motion.div
