@@ -1,66 +1,239 @@
 "use client";
 
-const data = [
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, createContext, useContext, useEffect } from "react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+
+type TestimonialData = {
+  category: string;
+  name: string;
+  src: string;
+};
+
+const data: TestimonialData[] = [
   {
     category: "Co-Founder & CTO Schoola",
-    title: "Abdulalim Ladan",
-    videoId: "Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs",
-    src: `https://image.mux.com/Ui2FMx4ZRKSq01r0000oQRSZ6YtZsVq5YePpS02WAD4AlNs/thumbnail.png`,
+    name: "Abdulalim Ladan",
+    src: `./assets/alim.mov`,
   },
   {
     category: "Lead Venture Analyst Amiron Ventures",
-    title: "Mackenzie Kyryluk",
-
-    videoId: "01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo",
-    src: `https://image.mux.com/01iTJehQ8KqoKaAXELne6QY9QaoRmkla006tJWYHqyQGo/thumbnail.png`,
+    name: "Mackenzie Kyryluk",
+    src: `./assets/mackenzie.mov`,
   },
   {
-    category: "Manager of Operations and MVP Development Amiron Ventures r",
-    title: "Mat Kleisinger",
-
-    videoId: "xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI",
-    src: `https://image.mux.com/xPa01rE6mlMwISsFAtACaGtAp5X7ONllnKcQf7bfyMEI/thumbnail.png`,
+    category: "Manager of Operations and MVP Development Amiron Ventures",
+    name: "Mat Kleisinger",
+    src: `./assets/mat.mp4`,
   },
   {
     category: "Lead Product Designer/ Manager Amiron Ventures",
-    title: "Bashir Mustapha",
-    videoId: "ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY",
-    src: `https://image.mux.com/ah9MhHKJ7d89CYjsjGL7F8tPzMMe5gBEqVVvxGUh2KY/thumbnail.png`,
+    name: "Bashir Mustapha",
+    src: `./assets/bashir.mov`,
   },
 ];
 
+// Context to manage which video is playing
+const VideoContext = createContext<{
+  currentPlayingId: string | null;
+  setCurrentPlayingId: (id: string | null) => void;
+}>({
+  currentPlayingId: null,
+  setCurrentPlayingId: () => {},
+});
+
 export default function Testimonials() {
+  const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
+
   return (
-    <div className="md:min-h-screen mx-auto md:space-y-16" id="testimonials">
-      <div className="space-y-4">
-        <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
-          What It&lsquo;s Like to Work With Me?
-        </h1>
-        <p className="text-xl font-cabinet-grotesk text-center text-white/70">
-          Words from those I&lsquo;ve worked with
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6  md:container mx-auto pt-8">
-          {data.map((item, index) => (
-            <div
-              key={index}
-              className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden shadow-lg bg-black"
-            >
-              <iframe
-                src={`https://player.mux.com/${item.videoId}?primary_color=ffffff&secondary_color=000000&controls=false`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute top-0 left-0 w-full h-full object-cover"
-                title={`${item.title} Testimonial`}
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
-              ></iframe>
-            </div>
-          ))}
+    <VideoContext.Provider value={{ currentPlayingId, setCurrentPlayingId }}>
+      <div className="md:min-h-screen mx-auto md:space-y-16" id="testimonials">
+        <div className="space-y-4">
+          <h1 className="font-gasoek-one text-4xl sm:text-6xl text-center text-white max-w-2xl mx-auto">
+            What It&lsquo;s Like to Work With Me?
+          </h1>
+          <p className="text-xl font-cabinet-grotesk text-center text-white/70">
+            Words from those I&lsquo;ve worked with
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:container mx-auto pt-8 px-4">
+            {data.map((each, index) => (
+              <VideoCard
+                key={each.name}
+                data={each}
+                index={index}
+                videoId={each.name}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </VideoContext.Provider>
+  );
+}
+
+function VideoCard({
+  data,
+  index,
+  videoId,
+}: {
+  data: TestimonialData;
+  index: number;
+  videoId: string;
+}) {
+  const { currentPlayingId, setCurrentPlayingId } = useContext(VideoContext);
+  const [isMuted, setIsMuted] = useState(true);
+  const [showControls, setShowControls] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const isPlaying = currentPlayingId === videoId;
+
+  // Pause video when another video starts playing
+  useEffect(() => {
+    if (!isPlaying && videoRef.current) {
+      videoRef.current.pause();
+    }
+  }, [isPlaying]);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setCurrentPlayingId(null);
+      } else {
+        videoRef.current.play();
+        setCurrentPlayingId(videoId);
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative group"
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
+    >
+      <div className="relative h-[60vh] rounded-2xl overflow-hidden bg-black">
+        {/* Video element */}
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          src={data.src}
+          loop
+          muted={isMuted}
+          playsInline
+        />
+
+        {/* Subtle dark gradient overlay for text visibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+        {/* Always visible name and position - Left bottom */}
+        <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="space-y-1"
+          >
+            <h3 className="text-white font-semibold text-sm drop-shadow-lg text-left">
+              {data.name}
+            </h3>
+            <p className="text-white/80 text-xs  drop-shadow-lg text-left max-w-[70%]">
+              {data.category}
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Controls overlay */}
+        <AnimatePresence>
+          {showControls && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-30"
+            >
+              {/* Center play/pause button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.button
+                  onClick={togglePlay}
+                  className="relative"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {/* Animated background circle */}
+                  <motion.div
+                    className="absolute inset-0 bg-white/20 rounded-full backdrop-blur-md"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+
+                  {/* Icon */}
+                  <div className="relative z-10 p-6">
+                    <motion.div
+                      key={isPlaying ? "pause" : "play"}
+                      initial={{ scale: 0.5, rotate: -90, opacity: 0 }}
+                      animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                      exit={{ scale: 0.5, rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isPlaying ? (
+                        <Pause className="w-8 h-8 text-white fill-white" />
+                      ) : (
+                        <Play className="w-8 h-8 text-white fill-white ml-1" />
+                      )}
+                    </motion.div>
+                  </div>
+                </motion.button>
+              </div>
+
+              {/* Bottom controls bar - Only mute button now */}
+              <motion.div
+                className="absolute bottom-4 right-4"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                {/* Mute/Unmute button */}
+                <motion.button
+                  onClick={toggleMute}
+                  className="p-3 bg-white/30 rounded-full backdrop-blur-md border border-white/20 shadow-lg"
+                  whileHover={{
+                    scale: 1.1,
+                    backgroundColor: "rgba(255,255,255,0.5)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div
+                    key={isMuted ? "muted" : "unmuted"}
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-5 h-5 text-white" />
+                    ) : (
+                      <Volume2 className="w-5 h-5 text-white" />
+                    )}
+                  </motion.div>
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   );
 }
