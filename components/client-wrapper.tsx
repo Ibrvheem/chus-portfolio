@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import LoadingScreen from "@/components/ui/loading-screen";
 
 const VIDEO_SOURCES = [
-  "./assets/alim.mov",
+  "./assets/abdulalim.mov",
   "./assets/mackenzie.mov",
   "./assets/mat.mp4",
   "./assets/bashir.mov",

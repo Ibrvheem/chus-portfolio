@@ -14,7 +14,7 @@ const data: TestimonialData[] = [
   {
     category: "Co-Founder & CTO Schoola",
     name: "Abdulalim Ladan",
-    src: `./assets/alim.mov`,
+    src: `./assets/abdulalim.mov`,
   },
   {
     category: "Lead Venture Analyst Amiron Ventures",
